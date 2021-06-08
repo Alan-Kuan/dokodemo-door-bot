@@ -1,0 +1,12 @@
+{
+  "name": "dokokemo-door-bot",
+  "version": "1.0.0",
+  "author": "Alan-Kuan",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.9",
+    "google-spreadsheet": "^3.1.15",
+    "telegraf": "^4.3.0"
+  },
+  "devDependencies": {}
+}
