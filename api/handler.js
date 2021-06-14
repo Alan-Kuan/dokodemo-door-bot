@@ -6,14 +6,20 @@ const { subscribe, unsubscribe } = require('../src/subscription.js');
 
 module.exports = async (req, res) => {
 
-    try {
-        const { body } = req;
-        const bot = new Telegraf(process.env.TG_TOKEN);
-
-        const help_list = `Hope this can help you!
+    const help_list = `Hope this can help you!
 /pic: send me picture of the day
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
+
+    try {
+        const { body, query } = req;
+
+        if(!query.key || query.key !== process.env.MY_API_KEY) {
+            res.status(403).send('Permission Denied!');
+            return;
+        }
+
+        const bot = new Telegraf(process.env.TG_TOKEN);
 
         bot.start(ctx => ctx.reply(help_list));
 
@@ -45,7 +51,6 @@ module.exports = async (req, res) => {
         await bot.handleUpdate(body);
 
         res.status(200).send('OK');
-
     } catch(err) {
         console.error('Error occurred in handler.');
         console.log(err.toString());

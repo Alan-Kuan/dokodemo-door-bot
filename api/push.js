@@ -7,6 +7,12 @@ const { getSubscribers } = require('../src/subscription.js');
 module.exports = async (req, res) => {
 
     try {
+        const { query } = req;
+        if(!query.key || query.key !== process.env.MY_API_KEY) {
+            res.status(403).send('Permission Denied!');
+            return;
+        }
+
         const tg = new Telegram(process.env.TG_TOKEN);
         let { img_url, img_caption } = await getPOTD();
         let subscribers = await getSubscribers();
