@@ -13,10 +13,11 @@ module.exports = async (req, res) => {
         for(let sub_id of subscribers) {
             await tg.sendPhoto(sub_id, img_url, { caption: img_caption });
         }
+        res.status(200).send('OK');
     } catch(err) {
         console.error('Error occurred in handler.');
         console.log(err.toString());
+        res.status(500).send('Internal Server Error!');
     }
 
-    res.send('OK');
 };
