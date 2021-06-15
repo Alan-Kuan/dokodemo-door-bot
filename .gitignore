@@ -1,5 +1,4 @@
 .vercel
 node_modules/*
 .env
-credentials.json
 test/*
