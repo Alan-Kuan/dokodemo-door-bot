@@ -10,6 +10,13 @@ const db = new pg({
     delayMs: 3000
 });
 
+async function haveSubscribed(chat_id) {
+    await db.connect();
+    let res = await db.query(`SELECT chat_id FROM subscribers WHERE chat_id = ${chat_id}`);
+    await db.end();
+    return res.rowCount > 0;
+}
+
 async function subscribe(chat_id) {
     await db.connect();
     let res = await db.query(`SELECT chat_id FROM subscribers WHERE chat_id = ${chat_id}`);
@@ -37,4 +44,4 @@ async function getSubscribers() {
     return res.rows.map(e => e.chat_id);
 }
 
-module.exports = { subscribe, unsubscribe, getSubscribers };
+module.exports = { haveSubscribed, subscribe, unsubscribe, getSubscribers };

@@ -1,8 +1,8 @@
 'use strict';
 
-const { Telegraf } = require('telegraf');
+const { Telegraf, Markup } = require('telegraf');
 const { getPOTD } = require('../src/wiki.js');
-const { subscribe, unsubscribe } = require('../src/subscription.js');
+const { haveSubscribed, subscribe, unsubscribe } = require('../src/subscription.js');
 
 function getRandomDate(begin, end) {
     return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
@@ -16,6 +16,10 @@ module.exports = async (req, res) => {
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
 
+    const keyboard = Markup.keyboard([
+        [{ text: 'Subscription' }]
+    ]).resize();
+
     try {
         const { body, query } = req;
 
@@ -26,7 +30,7 @@ module.exports = async (req, res) => {
 
         const bot = new Telegraf(process.env.TG_TOKEN);
 
-        bot.start(ctx => ctx.reply(help_list));
+        bot.start(ctx => ctx.reply("Let's find out something interesting!", keyboard));
 
         bot.help(ctx => ctx.reply(help_list));
 
@@ -39,6 +43,16 @@ module.exports = async (req, res) => {
             let date = getRandomDate(new Date(2004, 10, 1), new Date());
             let { img_url, img_caption } = await getPOTD(date);
             ctx.replyWithPhoto(img_url, { caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}` });
+        });
+
+        bot.hears('Subscription', async ctx => {
+            let chat_id = String(ctx.message.chat.id);
+            let have_sub = await haveSubscribed(chat_id);
+            if(have_sub) {
+                ctx.reply('You have subscribed.');
+            } else {
+                ctx.reply('You have not subscribed.');
+            }
         });
 
         bot.command('sub', async ctx => {
