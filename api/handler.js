@@ -4,10 +4,15 @@ const { Telegraf } = require('telegraf');
 const { getPOTD } = require('../src/wiki.js');
 const { subscribe, unsubscribe } = require('../src/subscription.js');
 
+function getRandomDate(begin, end) {
+    return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
+}
+
 module.exports = async (req, res) => {
 
     const help_list = `Hope this can help you!
 /pic: send me picture of the day
+/rand: send me a picture of a random date (since Nov. 1, 2004)
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
 
@@ -23,11 +28,17 @@ module.exports = async (req, res) => {
 
         bot.start(ctx => ctx.reply(help_list));
 
-        bot.command('help', ctx => ctx.reply(help_list));
+        bot.help(ctx => ctx.reply(help_list));
 
         bot.command('pic', async ctx => {
             let { img_url, img_caption } = await getPOTD();
             ctx.replyWithPhoto(img_url, { caption: img_caption });
+        });
+
+        bot.command('rand', async ctx => {
+            let date = getRandomDate(new Date(2004, 10, 1), new Date());
+            let { img_url, img_caption } = await getPOTD(date);
+            ctx.replyWithPhoto(img_url, { caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}` });
         });
 
         bot.command('sub', async ctx => {
