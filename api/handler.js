@@ -46,12 +46,20 @@ module.exports = async (req, res) => {
         });
 
         bot.hears('Subscription', async ctx => {
-            let chat_id = String(ctx.message.chat.id);
+            ctx.reply('Pick one', Markup.inlineKeyboard([
+                [{ text: 'Status', callback_data: 'status' }],
+                [{ text: 'Subscribe', callback_data: 'sub' }],
+                [{ text: 'Unsubscribe', callback_data: 'unsub' }]
+            ]));
+        });
+
+        bot.action('status', async ctx => {
+            let chat_id = String(ctx.callbackQuery.from.id);
             let have_sub = await haveSubscribed(chat_id);
             if(have_sub) {
-                ctx.reply('You have subscribed.');
+                ctx.answerCbQuery('You have subscribed.', { show_alert: true });
             } else {
-                ctx.reply('You have not subscribed.');
+                ctx.answerCbQuery('You have not subscribe.', { show_alert: true });
             }
         });
 
@@ -63,13 +71,29 @@ module.exports = async (req, res) => {
                 ctx.reply('Already subscribed!');
             }
         });
+        bot.action('sub', async ctx => {
+            let chat_id = String(ctx.callbackQuery.from.id);
+            if(await subscribe(chat_id)) {
+                ctx.answerCbQuery('Successfully subscribed!', { show_alert: true });
+            } else {
+                ctx.answerCbQuery('Already subscribed!', { show_alert: true });
+            }
+        });
 
         bot.command('unsub', async ctx => {
             let chat_id = String(ctx.chat.id);
             if(await unsubscribe(chat_id)) {
                 ctx.reply('Successfully unsubscribed!');
             } else {
-                ctx.reply('Have not subscribed!');
+                ctx.reply('Have not subscribe!');
+            }
+        });
+        bot.action('unsub', async ctx => {
+            let chat_id = String(ctx.callbackQuery.from.id);
+            if(await unsubscribe(chat_id)) {
+                ctx.answerCbQuery('Successfully unsubscribed!', { show_alert: true });
+            } else {
+                ctx.answerCbQuery('Have not subscribe!', { show_alert: true });
             }
         });
 
