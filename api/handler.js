@@ -48,7 +48,10 @@ module.exports = async (req, res) => {
     const f_rand = async ctx => {
         let date = getRandomDate(new Date(2004, 10, 1), new Date());
         let { img_url, img_caption } = await getPOTD(date);
-        ctx.replyWithPhoto(img_url, { caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}` });
+        ctx.replyWithPhoto(img_url, {
+            caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}`,
+            parse_mode: 'HTML'
+        });
     };
 
     // Subscription Status
