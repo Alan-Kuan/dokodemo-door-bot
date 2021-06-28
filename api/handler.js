@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     // Send Today's Picture
     const f_pic = async ctx => {
         let { img_url, img_caption } = await getPOTD();
-        ctx.replyWithPhoto(img_url, { caption: img_caption });
+        ctx.replyWithPhoto(img_url, { caption: img_caption, parse_mode: 'HTML' });
     };
 
     // Send a Random Picture

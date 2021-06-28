@@ -1,26 +1,25 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 async function getImageUrl(title) {
     const api_url = 'https://commons.wikimedia.org/w/api.php';
     const res = axios.get(api_url, {
         params: {
-            action: 'query',
+            action: 'expandtemplates',
             format: 'json',
             formatversion: 2,
-            prop: 'images',
-            titles: title
+            prop: 'wikitext',
+            text: title
         }
     })
     .then(res => {
-        let filename = res.data.query.pages[0].images[0].title;
+        let filename = res.data.expandtemplates.wikitext;
         return axios.get(api_url, {
             params: {
                 action: 'query',
                 format: 'json',
                 prop: 'imageinfo',
                 iiprop: 'url',
-                titles: filename
+                titles: `Image:${filename}`
             }
         })
     })
@@ -37,26 +36,47 @@ async function getImageUrl(title) {
 }
 
 async function getImageCaption(title) {
-    const webpage_url = `https://commons.wikimedia.org/wiki/${title}`
-    const res = axios.get(webpage_url)
-        .then(res => {
-            let $ = cheerio.load(res.data);
-            return $('.thumbcaption').children('.description').text();
+    const api_url = 'https://commons.wikimedia.org/w/api.php';
+    const res = axios.get(api_url, {
+        params: {
+            action: 'expandtemplates',
+            format: 'json',
+            formatversion: 2,
+            prop: 'wikitext',
+            text: title,
+        }
+    })
+    .then(res => {
+        let content = res.data.expandtemplates.wikitext;
+        return axios.get(api_url, {
+            params: {
+                action: 'parse',
+                format: 'json',
+                formatversion: 2,
+                prop: '',
+                summary: content
+            }
         })
-        .catch(err => {
-            console.log(err);
-        });
+    })
+    .then(res => {
+        let caption = res.data.parse.parsedsummary
+                        .replaceAll('\\', '')
+                        .replaceAll('href="/wiki', 'href="https://commons.wikimedia.org/wiki');
+        return caption;
+    })
+    .catch(err => {
+        console.log(err);
+    });
     return res;
 }
 
 async function getPOTD(date = new Date()) {
-    let title = `Template:Potd/${ date.toISOString().split('T')[0] }`;
-    let img_url = await getImageUrl(title);
+    let img_url = await getImageUrl(`{{Potd/${ date.toISOString().split('T')[0] }}}`);
     let segments = img_url.split('/');
     segments.splice(5, 0, 'thumb');
     segments.push(`1000px-${segments[8]}`);
     img_url = segments.join('/');
-    let img_caption = await getImageCaption(`${title}_(en)`);
+    let img_caption = await getImageCaption(`{{Potd/${ date.toISOString().split('T')[0] } (en)}}`);
     return { img_url, img_caption }
 }
 
