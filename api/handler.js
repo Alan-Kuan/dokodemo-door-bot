@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 
     const help_list = `Hope this can help you!
 /pic: send me picture of the day
-/rand: send me a picture of a random date (since Nov. 1, 2004)
+/rand: send me a picture of a random date (since Jan. 1, 2007)
 /status: check subscription status
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
 
     // Send a Random Picture
     const f_rand = async ctx => {
-        let date = getRandomDate(new Date(2004, 10, 1), new Date());
+        let date = getRandomDate(new Date(2007, 0, 1), new Date());
         let { img_url, img_caption } = await getPOTD(date);
         ctx.replyWithPhoto(img_url, {
             caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}`,
