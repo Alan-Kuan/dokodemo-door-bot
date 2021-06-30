@@ -10,6 +10,21 @@ function getRandomDate(begin, end) {
     return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
 }
 
+function getMenu(user_id, subscribed, src) {
+    const menu = Markup.keyboard([
+        [{ text: "Send me today's picture." }, { text: "Send me a random picture." }],
+        [{ text: '🔔Subscribe' }, { text: 'Show me the list of commands.' }],
+        [{ text: 'Source: en.wikipedia.org' }]
+    ]).resize();
+    if(subscribed) {
+        menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+    }
+    if(src === IMG_SRCS.wikipedia_en) {
+        menu.reply_markup.keyboard[2][0] = { text: 'Source: commons.wikimedia.org' };
+    }
+    return menu;
+}
+
 module.exports = async (req, res) => {
 
     const help_list = `Hope this can help you!
@@ -17,13 +32,6 @@ module.exports = async (req, res) => {
 /rand: send me a picture of a random date (since Jan. 1, 2007)
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
-
-    // Menu
-    const menu = Markup.keyboard([
-        [{ text: "Send me today's picture." }, { text: "Send me a random picture." }],
-        [{ text: '🔔Subscribe' }, { text: 'Show me the list of commands.' }],
-        [{ text: 'Source: en.wikipedia.org' }]
-    ]).resize();
 
     // Send Today's Picture
     const f_pic = async ctx => {
@@ -45,8 +53,9 @@ module.exports = async (req, res) => {
 
     // Subscribe
     const f_sub = async ctx => {
-        if(await subscribe(ctx.message.from.id)) {
-            menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+        let user_id = ctx.message.from.id;
+        if(await subscribe(user_id)) {
+            let menu = getMenu(user_id, true, await getImgSource(user_id));
             ctx.reply('Successfully subscribed!', menu);
         } else {
             ctx.reply('Already subscribed!');
@@ -55,7 +64,9 @@ module.exports = async (req, res) => {
 
     // Unsubscribe
     const f_unsub = async ctx => {
-        if(await unsubscribe(ctx.message.from.id)) {
+        let user_id = ctx.message.from.id;
+        if(await unsubscribe(user_id)) {
+            let menu = getMenu(user_id, false, await getImgSource(user_id));
             ctx.reply('Successfully unsubscribed!', menu);
         } else {
             ctx.reply('Have not subscribe!');
@@ -73,10 +84,13 @@ module.exports = async (req, res) => {
         const bot = new Telegraf(process.env.TG_TOKEN);
 
         bot.start(async ctx => {
-            await setImgSource(ctx.message.from.id, IMG_SRCS.wikimedia);
-            if(await haveSubscribed(ctx.message.from.id)) {
-                menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+            let user_id = ctx.message.from.id;
+            let src = await getImgSource(user_id);
+            if(src === null) {
+                await setImgSource(user_id, IMG_SRCS.wikimedia);
+                src = IMG_SRCS.wikimedia;
             }
+            let menu = getMenu(user_id, await haveSubscribed(user_id), src);
             ctx.reply("Let's find out something interesting!", menu);
         });
 
@@ -96,12 +110,15 @@ module.exports = async (req, res) => {
         bot.hears('🔕Unsubscribe', f_unsub);
 
         bot.hears('Source: en.wikipedia.org', async ctx => {
-            await setImgSource(ctx.message.from.id, IMG_SRCS.wikipedia_en);
-            menu.reply_markup.keyboard[2][0] = { text: 'Source: commons.wikimedia.org' };
+            let user_id = ctx.message.from.id;
+            await setImgSource(user_id, IMG_SRCS.wikipedia_en);
+            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikipedia_en);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
         bot.hears('Source: commons.wikimedia.org', async ctx => {
-            await setImgSource(ctx.message.from.id, IMG_SRCS.wikimedia);
+            let user_id = ctx.message.from.id;
+            await setImgSource(user_id, IMG_SRCS.wikimedia);
+            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 

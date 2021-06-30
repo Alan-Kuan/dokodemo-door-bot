@@ -14,6 +14,9 @@ async function getImgSource(user_id) {
     await db.connect();
     let res = await db.query(`SELECT img_source FROM user_preference WHERE user_id = ${user_id}`);
     await db.end();
+    if(res.rowCount === 0) {
+        return null;
+    }
     return res.rows[0].img_source;
 }
 
