@@ -26,6 +26,7 @@ async function getImageUrl(title, src) {
             params: {
                 action: 'query',
                 format: 'json',
+                formatversion: 2,
                 prop: 'imageinfo',
                 iiprop: 'url',
                 titles: `Image:${filename}`
@@ -33,10 +34,7 @@ async function getImageUrl(title, src) {
         })
     })
     .then(res => {
-        let pages = res.data.query.pages;
-        let key = Object.keys(pages)[0];
-        let img_url = pages[key].imageinfo[0].url;
-        return img_url;
+        return res.data.query.pages[0].imageinfo[0].url;
     })
     .catch(err => {
         console.log(err);
