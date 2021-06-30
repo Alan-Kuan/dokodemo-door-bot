@@ -10,36 +10,20 @@ function getRandomDate(begin, end) {
     return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
 }
 
-function _reply(ctx, msg, is_cb=false) {
-    if(is_cb) {
-        ctx.answerCbQuery(msg, { show_alert: true });
-    } else {
-        ctx.reply(msg);
-    }
-}
-
 module.exports = async (req, res) => {
 
     const help_list = `Hope this can help you!
 /pic: send me picture of the day
 /rand: send me a picture of a random date (since Jan. 1, 2007)
-/status: check subscription status
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day`;
 
     // Menu
     const menu = Markup.keyboard([
         [{ text: "Send me today's picture." }, { text: "Send me a random picture." }],
-        [{ text: 'Subscription' }, { text: 'Show me the list of commands.' }],
+        [{ text: '🔔Subscribe' }, { text: 'Show me the list of commands.' }],
         [{ text: 'Source: en.wikipedia.org' }]
     ]).resize();
-
-    // Subscription Menu
-    const sub_menu = Markup.inlineKeyboard([[
-        { text: 'Status', callback_data: 'status' },
-        { text: 'Subscribe', callback_data: 'sub' },
-        { text: 'Unsubscribe', callback_data: 'unsub' }
-    ]]);
 
     // Send Today's Picture
     const f_pic = async ctx => {
@@ -59,30 +43,22 @@ module.exports = async (req, res) => {
         });
     };
 
-    // Subscription Status
-    const f_status = async (ctx, user_id, is_cb=false) => {
-        if(await haveSubscribed(user_id)) {
-            _reply(ctx, 'You have subscribed.', is_cb);
-        } else {
-            _reply(ctx, 'You have not subscribe.', is_cb);
-        }
-    }
-
     // Subscribe
-    const f_sub = async (ctx, user_id, is_cb=false) => {
-        if(await subscribe(user_id)) {
-            _reply(ctx, 'Successfully subscribed!', is_cb);
+    const f_sub = async ctx => {
+        if(await subscribe(ctx.message.from.id)) {
+            menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+            ctx.reply('Successfully subscribed!', menu);
         } else {
-            _reply(ctx, 'Already subscribed!', is_cb);
+            ctx.reply('Already subscribed!');
         }
     }
 
     // Unsubscribe
-    const f_unsub = async (ctx, user_id, is_cb=false) => {
-        if(await unsubscribe(user_id)) {
-            _reply(ctx, 'Successfully unsubscribed!', is_cb);
+    const f_unsub = async ctx => {
+        if(await unsubscribe(ctx.message.from.id)) {
+            ctx.reply('Successfully unsubscribed!', menu);
         } else {
-            _reply(ctx, 'Have not subscribe!', is_cb);
+            ctx.reply('Have not subscribe!');
         }
     }
     
@@ -98,6 +74,9 @@ module.exports = async (req, res) => {
 
         bot.start(async ctx => {
             await setImgSource(ctx.message.from.id, IMG_SRCS.wikimedia);
+            if(await haveSubscribed(ctx.message.from.id)) {
+                menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+            }
             ctx.reply("Let's find out something interesting!", menu);
         });
 
@@ -110,16 +89,11 @@ module.exports = async (req, res) => {
         bot.command('rand', f_rand);
         bot.hears("Send me a random picture.", f_rand);
 
-        bot.hears('Subscription', async ctx => ctx.reply('Pick one.', sub_menu));
+        bot.command('sub', f_sub);
+        bot.hears('🔔Subscribe', f_sub);
 
-        bot.command('status', async ctx => f_status(ctx, ctx.message.from.id));
-        bot.action('status', async ctx => f_status(ctx, ctx.callbackQuery.from.id, true));
-
-        bot.command('sub', async ctx => f_sub(ctx, ctx.message.from.id));
-        bot.action('sub', async ctx => f_sub(ctx, ctx.callbackQuery.from.id, true));
-
-        bot.command('unsub', async ctx => f_unsub(ctx, ctx.message.from.id));
-        bot.action('unsub', async ctx => f_unsub(ctx, ctx.callbackQuery.from.id, true));
+        bot.command('unsub', f_unsub);
+        bot.hears('🔕Unsubscribe', f_unsub);
 
         bot.hears('Source: en.wikipedia.org', async ctx => {
             await setImgSource(ctx.message.from.id, IMG_SRCS.wikipedia_en);
