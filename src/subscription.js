@@ -10,38 +10,38 @@ const db = new pg({
     delayMs: 3000
 });
 
-async function haveSubscribed(chat_id) {
+async function haveSubscribed(user_id) {
     await db.connect();
-    let res = await db.query(`SELECT chat_id FROM subscribers WHERE chat_id = ${chat_id}`);
+    let res = await db.query(`SELECT user_id FROM subscribers WHERE user_id = ${user_id}`);
     await db.end();
     return res.rowCount > 0;
 }
 
-async function subscribe(chat_id) {
+async function subscribe(user_id) {
     await db.connect();
-    let res = await db.query(`SELECT chat_id FROM subscribers WHERE chat_id = ${chat_id}`);
+    let res = await db.query(`SELECT user_id FROM subscribers WHERE user_id = ${user_id}`);
     // have subscribed
     if(res.rowCount > 0) {
         await db.end();
         return false;
     }
-    await db.query(`INSERT INTO subscribers VALUES(${chat_id})`);
+    await db.query(`INSERT INTO subscribers VALUES(${user_id})`);
     await db.end();
     return true;
 }
 
-async function unsubscribe(chat_id) {
+async function unsubscribe(user_id) {
     await db.connect();
-    let res = await db.query(`DELETE FROM subscribers WHERE chat_id = ${chat_id}`);
+    let res = await db.query(`DELETE FROM subscribers WHERE user_id = ${user_id}`);
     await db.end();
     return res.rowCount > 0;
 }
 
-async function getSubscribers() {
+async function getSubscribers(src) {
     await db.connect();
-    let res = await db.query(`SELECT chat_id FROM subscribers`);
+    let res = await db.query(`SELECT user_id FROM subscribers NATURAL JOIN user_preference WHERE img_source = '${src}'`);
     await db.end();
-    return res.rows.map(e => e.chat_id);
+    return res.rows.map(e => e.user_id);
 }
 
 module.exports = { haveSubscribed, subscribe, unsubscribe, getSubscribers };

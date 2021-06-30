@@ -1,8 +1,17 @@
 const axios = require('axios');
 
-async function getImageUrl(title) {
-    const api_url = 'https://commons.wikimedia.org/w/api.php';
-    const res = axios.get(api_url, {
+const IMG_SRCS = {
+    wikimedia: 'm',
+    wikipedia_en: 'e'
+};
+
+const api_urls = {
+    'm': 'https://commons.wikimedia.org/w/api.php',
+    'e': 'https://en.wikipedia.org/w/api.php', 
+};
+
+async function getImageUrl(title, src) {
+    const res = axios.get(api_urls[src], {
         params: {
             action: 'expandtemplates',
             format: 'json',
@@ -13,7 +22,7 @@ async function getImageUrl(title) {
     })
     .then(res => {
         let filename = res.data.expandtemplates.wikitext;
-        return axios.get(api_url, {
+        return axios.get(api_urls[src], {
             params: {
                 action: 'query',
                 format: 'json',
@@ -35,9 +44,8 @@ async function getImageUrl(title) {
     return res;
 }
 
-async function getImageCaption(title) {
-    const api_url = 'https://commons.wikimedia.org/w/api.php';
-    const res = axios.get(api_url, {
+async function getImageCaption(title, src) {
+    const res = axios.get(api_urls[src], {
         params: {
             action: 'expandtemplates',
             format: 'json',
@@ -48,7 +56,7 @@ async function getImageCaption(title) {
     })
     .then(res => {
         let content = res.data.expandtemplates.wikitext;
-        return axios.get(api_url, {
+        return axios.get(api_urls[src], {
             params: {
                 action: 'parse',
                 format: 'json',
@@ -59,9 +67,15 @@ async function getImageCaption(title) {
         })
     })
     .then(res => {
-        let caption = res.data.parse.parsedsummary
-                        .replaceAll('\\', '')
-                        .replaceAll('href="/wiki', 'href="https://commons.wikimedia.org/wiki');
+        let caption = res.data.parse.parsedsummary.replaceAll('\\', '')
+        switch(src) {
+        case IMG_SRCS.wikimedia:
+             caption = caption.replaceAll('href="/wiki', 'href="https://commons.wikimedia.org/wiki');
+            break;
+        case IMG_SRCS.wikipedia_en:
+            caption = caption.replaceAll('href="/wiki', 'href="https://en.wikipedia.org/wiki');
+            break;
+        }
         return caption;
     })
     .catch(err => {
@@ -70,14 +84,27 @@ async function getImageCaption(title) {
     return res;
 }
 
-async function getPOTD(date = new Date()) {
-    let img_url = await getImageUrl(`{{Potd/${ date.toISOString().split('T')[0] }}}`);
+async function getPOTD(date, src) {
+    let template_content = '';
+    let img_url = '';
+    let img_caption = '';
+    switch(src) {
+    case IMG_SRCS.wikimedia:
+        template_content = `Potd/${ date.toISOString().split('T')[0] }`;
+        img_url = await getImageUrl(`{{${template_content}}}`, src);
+        img_caption = await getImageCaption(`{{${template_content} (en)}}`, src);
+        break;
+    case IMG_SRCS.wikipedia_en:
+        template_content = `POTD/${ date.toISOString().split('T')[0] }`;
+        img_url = await getImageUrl(`{{${template_content}|image}}`, src);
+        img_caption = await getImageCaption(`{{${template_content}|caption}}`, src);
+        break;
+    }
     let segments = img_url.split('/');
     segments.splice(5, 0, 'thumb');
-    segments.push(`1000px-${segments[8]}`);
+    segments.push(`1024px-${segments[8]}`);
     img_url = segments.join('/');
-    let img_caption = await getImageCaption(`{{Potd/${ date.toISOString().split('T')[0] } (en)}}`);
     return { img_url, img_caption }
 }
 
-module.exports = { getPOTD };
+module.exports = { getPOTD, IMG_SRCS };
