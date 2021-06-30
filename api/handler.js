@@ -13,14 +13,14 @@ function getRandomDate(begin, end) {
 function getMenu(user_id, subscribed, src) {
     const menu = Markup.keyboard([
         [{ text: "Send me today's picture." }, { text: "Send me a random picture." }],
-        [{ text: '🔔Subscribe' }, { text: 'Show me the list of commands.' }],
-        [{ text: 'Source: en.wikipedia.org' }]
+        [{ text: '🔔Subscribe' }, { text: 'Source: en.wikipedia.org' }],
+        [{ text: 'Show me command list.' }]
     ]).resize();
     if(subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
     }
     if(src === IMG_SRCS.wikipedia_en) {
-        menu.reply_markup.keyboard[2][0] = { text: 'Source: commons.wikimedia.org' };
+        menu.reply_markup.keyboard[1][1] = { text: 'Source: commons.wikimedia.org' };
     }
     return menu;
 }
@@ -95,7 +95,7 @@ module.exports = async (req, res) => {
         });
 
         bot.help(ctx => ctx.reply(help_list));
-        bot.hears('Show me the list of commands.', ctx => ctx.reply(help_list));
+        bot.hears('Show me command list.', ctx => ctx.reply(help_list));
 
         bot.command('pic', f_pic);
         bot.hears("Send me today's picture.", f_pic);
