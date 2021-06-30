@@ -1,12 +1,12 @@
 const axios = require('axios');
 
 const IMG_SRCS = {
-    wikimedia: 'm',
+    wikimedia_commons: 'c',
     wikipedia_en: 'e'
 };
 
 const api_urls = {
-    'm': 'https://commons.wikimedia.org/w/api.php',
+    'c': 'https://commons.wikimedia.org/w/api.php',
     'e': 'https://en.wikipedia.org/w/api.php', 
 };
 
@@ -67,7 +67,7 @@ async function getImageCaption(title, src) {
     .then(res => {
         let caption = res.data.parse.parsedsummary.replaceAll('\\', '')
         switch(src) {
-        case IMG_SRCS.wikimedia:
+        case IMG_SRCS.wikimedia_commons:
              caption = caption.replaceAll('href="/wiki', 'href="https://commons.wikimedia.org/wiki');
             break;
         case IMG_SRCS.wikipedia_en:
@@ -87,7 +87,7 @@ async function getPOTD(date, src) {
     let img_url = '';
     let img_caption = '';
     switch(src) {
-    case IMG_SRCS.wikimedia:
+    case IMG_SRCS.wikimedia_commons:
         template_content = `Potd/${ date.toISOString().split('T')[0] }`;
         img_url = await getImageUrl(`{{${template_content}}}`, src);
         img_caption = await getImageCaption(`{{${template_content} (en)}}`, src);

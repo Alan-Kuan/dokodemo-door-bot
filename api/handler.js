@@ -87,8 +87,8 @@ module.exports = async (req, res) => {
             let user_id = ctx.message.from.id;
             let src = await getImgSource(user_id);
             if(src === null) {
-                await setImgSource(user_id, IMG_SRCS.wikimedia);
-                src = IMG_SRCS.wikimedia;
+                await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
+                src = IMG_SRCS.wikimedia_commons;
             }
             let menu = getMenu(user_id, await haveSubscribed(user_id), src);
             ctx.reply("Let's find out something interesting!", menu);
@@ -117,8 +117,8 @@ module.exports = async (req, res) => {
         });
         bot.hears('🗃Source: commons.wikimedia.org', async ctx => {
             let user_id = ctx.message.from.id;
-            await setImgSource(user_id, IMG_SRCS.wikimedia);
-            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia);
+            await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
+            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia_commons);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 
