@@ -65,13 +65,13 @@ async function getImageCaption(title, src) {
         })
     })
     .then(res => {
-        let caption = res.data.parse.parsedsummary.replaceAll('\\', '')
+        let caption = res.data.parse.parsedsummary.replace(/\\/g, '')
         switch(src) {
         case IMG_SRCS.wikimedia_commons:
-             caption = caption.replaceAll('href="/wiki', 'href="https://commons.wikimedia.org/wiki');
+             caption = caption.replace(/href="\/wiki/g, 'href="https://commons.wikimedia.org/wiki');
             break;
         case IMG_SRCS.wikipedia_en:
-            caption = caption.replaceAll('href="/wiki', 'href="https://en.wikipedia.org/wiki');
+            caption = caption.replace(/href="\/wiki/g, 'href="https://en.wikipedia.org/wiki');
             break;
         }
         return caption;
