@@ -59,13 +59,17 @@ async function getImageCaption(title, src) {
                 action: 'parse',
                 format: 'json',
                 formatversion: 2,
-                prop: '',
-                summary: content
+                prop: 'text',
+                contentmodel: 'wikitext',
+                text: content,
+                wrapoutputclass: '',
+                disablelimitreport: 1
             }
         })
     })
     .then(res => {
-        let caption = res.data.parse.parsedsummary.replace(/\\/g, '')
+        let caption = res.data.parse.text.replace(/\\"/g, '"').replace(/\\n/g, '').replace(/\\r/g, '')
+            .replace(/<p>/g, '').replace(/<\/p>/g, '');
         switch(src) {
         case IMG_SRCS.wikimedia_commons:
              caption = caption.replace(/href="\/wiki/g, 'href="https://commons.wikimedia.org/wiki');
