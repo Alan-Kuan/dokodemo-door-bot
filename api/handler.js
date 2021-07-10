@@ -28,10 +28,12 @@ function getMenu(user_id, subscribed, src) {
 module.exports = async (req, res) => {
 
     const help_list = `Hope this can help you!
+/start: open the menu
 /pic: send me picture of the day
 /rand: send me a picture of a random date (since Jan. 1, 2007)
 /sub: subscribe picture of the day
-/unsub: unsubscribe picture of the day`;
+/unsub: unsubscribe picture of the day
+/help: show a list of available commands`;
 
     // Send Today's Picture
     const f_pic = async ctx => {
