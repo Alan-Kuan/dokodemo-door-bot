@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
             reply_markup: {
                 inline_keyboard: [[{
                     text: 'Show Credit',
-                    callback_data: `credit ${date}`
+                    callback_data: `credit ${date} ${src}`
                 }]]
             }
         });
@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
             reply_markup: {
                 inline_keyboard: [[{
                     text: 'Show Credit',
-                    callback_data: `credit ${date}`
+                    callback_data: `credit ${date} ${src}`
                 }]]
             }
         });
@@ -160,30 +160,32 @@ License: [The MIT License](https://tldrlegal.com/license/mit-license#summary)`, 
         });
 
         bot.action(/credit.*/, async ctx => {
-            let date = ctx.callbackQuery.data.split(' ')[1];
-            let src = await getImgSource(ctx.callbackQuery.from.id);
+            let tokens = ctx.callbackQuery.data.split(' ');
+            let date = tokens[1];
+            let src = tokens[2];
             let credit = await getCreditOfPotd(date, src);
             ctx.editMessageCaption(credit, {
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Caption',
-                        callback_data: `caption ${date}`
+                        callback_data: `caption ${date} ${src}`
                     }]]
                 }
             })
         });
 
         bot.action(/caption.*/, async ctx => {
-            let date = ctx.callbackQuery.data.split(' ')[1];
-            let src = await getImgSource(ctx.callbackQuery.from.id);
+            let tokens = ctx.callbackQuery.data.split(' ');
+            let date = tokens[1];
+            let src = tokens[2];
             let caption = await getCaptionOfPotd(date, src);
             ctx.editMessageCaption(caption, {
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Credit',
-                        callback_data: `credit ${date}`
+                        callback_data: `credit ${date} ${src}`
                     }]]
                 }
             })
