@@ -10,8 +10,13 @@ const api_urls = {
     'e': 'https://en.wikipedia.org/w/api.php', 
 };
 
+const user_agent = `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env.CONTACT })`;
+
 async function getImageFileName(title, src) {
     const res = axios.get(api_urls[src], {
+            headers: {
+                'User-Agent': user_agent
+            },
             params: {
                 action: 'expandtemplates',
                 format: 'json',
@@ -30,6 +35,9 @@ async function getImageUrl(title, src) {
     const res = getImageFileName(title, src)
         .then(filename => {
             return axios.get(api_urls[src], {
+                headers: {
+                    'User-Agent': user_agent
+                },
                 params: {
                     action: 'query',
                     format: 'json',
@@ -54,6 +62,9 @@ async function getImageCredit(title, src) {
     const res = getImageFileName(title, src)
         .then(filename => {
             return axios.get(api_urls[src], {
+                headers: {
+                    'User-Agent': user_agent
+                },
                 params: {
                     action: 'query',
                     format: 'json',
@@ -81,6 +92,9 @@ async function getImageCredit(title, src) {
 
 async function getImageCaption(title, src) {
     const res = axios.get(api_urls[src], {
+            headers: {
+                'User-Agent': user_agent
+            },
             params: {
                 action: 'expandtemplates',
                 format: 'json',
@@ -92,6 +106,9 @@ async function getImageCaption(title, src) {
         .then(res => {
             let content = res.data.expandtemplates.wikitext;
             return axios.get(api_urls[src], {
+                headers: {
+                    'User-Agent': user_agent
+                },
                 params: {
                     action: 'parse',
                     format: 'json',
