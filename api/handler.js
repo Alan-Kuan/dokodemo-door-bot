@@ -14,7 +14,7 @@ function getMenu(user_id, subscribed, src) {
     const menu = Markup.keyboard([
         [{ text: "🌄Send me today's picture." }, { text: "🎲Send me a random picture." }],
         [{ text: '🔔Subscribe' }, { text: '🗃Source: en.wikipedia.org' }],
-        [{ text: '📝Show me command list.' }]
+        [{ text: '📝Show me command list.' }, { text: 'ℹAbout the bot' }]
     ]).resize();
     if(subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
@@ -33,7 +33,8 @@ module.exports = async (req, res) => {
 /rand: send me a picture of a random date (since Jan. 1, 2007)
 /sub: subscribe picture of the day
 /unsub: unsubscribe picture of the day
-/help: show a list of available commands`;
+/help: show a list of available commands
+/about: detailed information about the bot`;
 
     // Send Today's Picture
     const f_pic = async ctx => {
@@ -93,6 +94,17 @@ module.exports = async (req, res) => {
             ctx.reply('Have not subscribe!');
         }
     }
+
+    // About
+    const f_about = ctx => {
+        ctx.replyWithMarkdownV2(`__*Dokodemo Door Bot*__
+This is a hobby project by Alan Kuan in 2021\\.
+All sent photos were shot or uploaded by contributors on [Wikipedia](https://en.wikipedia.org) \
+and [Wikimedia Commons](https://commons.wikimedia.org)\\.
+Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)`, {
+            disable_web_page_preview: true
+        });
+    }
     
     try {
         const { body, query } = req;
@@ -129,6 +141,9 @@ module.exports = async (req, res) => {
 
         bot.command('unsub', f_unsub);
         bot.hears('🔕Unsubscribe', f_unsub);
+
+        bot.command('about', f_about);
+        bot.hears('ℹAbout the bot', f_about);
 
         bot.hears('🗃Source: en.wikipedia.org', async ctx => {
             let user_id = ctx.message.from.id;
