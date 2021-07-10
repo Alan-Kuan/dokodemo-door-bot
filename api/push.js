@@ -5,10 +5,9 @@ const { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } = require('../src/wiki.js');
 const { getSubscribers } = require('../src/subscription.js');
 
 module.exports = async (req, res) => {
-
     try {
-        const { query } = req;
-        if(!query.key || query.key !== process.env.MY_API_KEY) {
+        const { body } = req;
+        if(!body.key || body.key !== process.env.MY_API_KEY) {
             res.status(403).send('Permission Denied!');
             return;
         }
@@ -16,7 +15,7 @@ module.exports = async (req, res) => {
         const tg = new Telegram(process.env.TG_TOKEN);
 
         for(let key of Object.keys(IMG_SRCS)) {
-            let date = new Date().toISOString.split('T')[0];
+            let date = new Date().toISOString().split('T')[0];
             let src = IMG_SRCS[key];
             let img_url = await getUrlOfPotd(date, src);
             let img_caption = await getCaptionOfPotd(date, src);
