@@ -180,7 +180,7 @@ License: [The MIT License](https://tldrlegal.com/license/mit-license#summary)`, 
             let date = tokens[1];
             let src = tokens[2];
             let caption = await getCaptionOfPotd(date, src);
-            ctx.editMessageCaption(caption, {
+            ctx.editMessageCaption(`[${date}]\n${caption}`, {
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
