@@ -1,7 +1,8 @@
 {
   "name": "dokokemo-door-bot",
   "version": "1.0.0",
-  "author": "Alan-Kuan",
+  "author": "Alan-Kuan <kuanhaoan@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
     "serverless-postgres": "^1.9.4",

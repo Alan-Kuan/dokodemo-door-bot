@@ -101,7 +101,8 @@ module.exports = async (req, res) => {
 This is a hobby project by Alan Kuan in 2021\\.
 All sent photos were shot or uploaded by contributors on [Wikipedia](https://en.wikipedia.org) \
 and [Wikimedia Commons](https://commons.wikimedia.org)\\.
-Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)`, {
+Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
+License: [The MIT License](https://tldrlegal.com/license/mit-license#summary)`, {
             disable_web_page_preview: true
         });
     }
