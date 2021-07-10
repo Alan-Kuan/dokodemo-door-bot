@@ -79,12 +79,12 @@ async function getImageCredit(title, src) {
         .then(res => {
             let metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
             let artist = metadata.Artist.value
-                // escape html tags, since there may be tags that cannot be rendered on Telegram
+                // remove html tags, since there may be tags that cannot be rendered on Telegram
                 .replace(/<.*?>/g, '').replace(/<\/.*?>/g, '')
                 // replace multiple white spaces with one space
                 .replace(/\s\s+/g, ' ');
             let license = metadata.LicenseShortName.value;
-            let license_url = metadata.LicenseUrl.value;
+            let license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
             return { artist, license, license_url };
         });
     return res;
@@ -183,7 +183,11 @@ async function getCreditOfPotd(date, src) {
         var { artist, license, license_url } = await getImageCredit(template, src);
         break;
     }
-    return `Credit: ${artist}\nLicense: <a href="${license_url}">${license}</a>`;
+    if(license_url === null) {
+        return `Credit: ${artist}\nLicense: ${license}`;
+    } else {
+        return `Credit: ${artist}\nLicense: <a href="${license_url}">${license}</a>`;
+    }
 }
 
 module.exports = { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS };
