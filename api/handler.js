@@ -1,7 +1,7 @@
 'use strict';
 
 const { Telegraf, Markup } = require('telegraf');
-const { getPOTD, IMG_SRCS } = require('../src/wiki.js');
+const { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } = require('../src/wiki.js');
 const { haveSubscribed, subscribe, unsubscribe } = require('../src/subscription.js');
 const { getImgSource, setImgSource } = require('../src/user_preference.js');
 
@@ -35,19 +35,38 @@ module.exports = async (req, res) => {
 
     // Send Today's Picture
     const f_pic = async ctx => {
+        let date = new Date().toISOString().split('T')[0];
         let src = await getImgSource(ctx.message.from.id);
-        let { img_url, img_caption } = await getPOTD(new Date(), src);
-        ctx.replyWithPhoto(img_url, { caption: img_caption, parse_mode: 'HTML' });
+        let img_url = await getUrlOfPotd(date, src);
+        let img_caption = await getCaptionOfPotd(date, src);
+        ctx.replyWithPhoto(img_url, {
+            caption: img_caption,
+            parse_mode: 'HTML',
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: 'Show Credit',
+                    callback_data: `credit ${date}`
+                }]]
+            }
+        });
     };
 
     // Send a Random Picture
     const f_rand = async ctx => {
+        let date = getRandomDate(new Date(2007, 0, 1), new Date())
+            .toISOString().split('T')[0];
         let src = await getImgSource(ctx.message.from.id);
-        let date = getRandomDate(new Date(2007, 0, 1), new Date());
-        let { img_url, img_caption } = await getPOTD(date, src);
+        let img_url = await getUrlOfPotd(date, src);
+        let img_caption = await getCaptionOfPotd(date, src);
         ctx.replyWithPhoto(img_url, {
-            caption: `[${ date.toISOString().split('T')[0] }]\n${img_caption}`,
-            parse_mode: 'HTML'
+            caption: `[${date}]\n${img_caption}`,
+            parse_mode: 'HTML',
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: 'Show Credit',
+                    callback_data: `credit ${date}`
+                }]]
+            }
         });
     };
 
@@ -120,6 +139,36 @@ module.exports = async (req, res) => {
             await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
             let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia_commons);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
+        });
+
+        bot.action(/credit.*/, async ctx => {
+            let date = ctx.callbackQuery.data.split(' ')[1];
+            let src = await getImgSource(ctx.callbackQuery.from.id);
+            let credit = await getCreditOfPotd(date, src);
+            ctx.editMessageCaption(credit, {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: 'Show Caption',
+                        callback_data: `caption ${date}`
+                    }]]
+                }
+            })
+        });
+
+        bot.action(/caption.*/, async ctx => {
+            let date = ctx.callbackQuery.data.split(' ')[1];
+            let src = await getImgSource(ctx.callbackQuery.from.id);
+            let caption = await getCaptionOfPotd(date, src);
+            ctx.editMessageCaption(caption, {
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: 'Show Credit',
+                        callback_data: `credit ${date}`
+                    }]]
+                }
+            })
         });
 
         await bot.handleUpdate(body);
