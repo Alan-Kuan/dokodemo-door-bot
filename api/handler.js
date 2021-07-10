@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
         let user_id = ctx.message.from.id;
         if(await subscribe(user_id)) {
             let menu = getMenu(user_id, true, await getImgSource(user_id));
-            ctx.reply('Successfully subscribed!', menu);
+            ctx.reply('Great! I will send you picture of the day at 8:00 a.m. (UTC+8) every day.', menu);
         } else {
             ctx.reply('Already subscribed!');
         }
@@ -89,7 +89,7 @@ module.exports = async (req, res) => {
         let user_id = ctx.message.from.id;
         if(await unsubscribe(user_id)) {
             let menu = getMenu(user_id, false, await getImgSource(user_id));
-            ctx.reply('Successfully unsubscribed!', menu);
+            ctx.reply('Got it! I will not send you pictures unless you ask for it.', menu);
         } else {
             ctx.reply('Have not subscribe!');
         }
