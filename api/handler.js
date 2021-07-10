@@ -12,15 +12,15 @@ function getRandomDate(begin, end) {
 
 function getMenu(user_id, subscribed, src) {
     const menu = Markup.keyboard([
-        [{ text: "🌄Send me today's picture." }, { text: "🎲Send me a random picture." }],
-        [{ text: '🔔Subscribe' }, { text: '🗃Source: en.wikipedia.org' }],
-        [{ text: '📝Show me command list.' }, { text: 'ℹAbout the bot' }]
+        [{ text: "🌄 Send me today's picture." }, { text: "🎲 Send me a random picture." }],
+        [{ text: '🔔 Subscribe' }, { text: '🗃 Source: en.wikipedia.org' }],
+        [{ text: '📝 Show me command list.' }, { text: 'ℹ About the bot' }]
     ]).resize();
     if(subscribed) {
-        menu.reply_markup.keyboard[1][0] = { text: '🔕Unsubscribe' };
+        menu.reply_markup.keyboard[1][0] = { text: '🔕 Unsubscribe' };
     }
     if(src === IMG_SRCS.wikipedia_en) {
-        menu.reply_markup.keyboard[1][1] = { text: '🗃Source: commons.wikimedia.org' };
+        menu.reply_markup.keyboard[1][1] = { text: '🗃 Source: commons.wikimedia.org' };
     }
     return menu;
 }
@@ -128,30 +128,30 @@ Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-
         });
 
         bot.help(ctx => ctx.reply(help_list));
-        bot.hears('📝Show me command list.', ctx => ctx.reply(help_list));
+        bot.hears('📝 Show me command list.', ctx => ctx.reply(help_list));
 
         bot.command('pic', f_pic);
-        bot.hears("🌄Send me today's picture.", f_pic);
+        bot.hears("🌄 Send me today's picture.", f_pic);
 
         bot.command('rand', f_rand);
-        bot.hears("🎲Send me a random picture.", f_rand);
+        bot.hears("🎲 Send me a random picture.", f_rand);
 
         bot.command('sub', f_sub);
-        bot.hears('🔔Subscribe', f_sub);
+        bot.hears('🔔 Subscribe', f_sub);
 
         bot.command('unsub', f_unsub);
-        bot.hears('🔕Unsubscribe', f_unsub);
+        bot.hears('🔕 Unsubscribe', f_unsub);
 
         bot.command('about', f_about);
-        bot.hears('ℹAbout the bot', f_about);
+        bot.hears('ℹ About the bot', f_about);
 
-        bot.hears('🗃Source: en.wikipedia.org', async ctx => {
+        bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
             let user_id = ctx.message.from.id;
             await setImgSource(user_id, IMG_SRCS.wikipedia_en);
             let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikipedia_en);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
-        bot.hears('🗃Source: commons.wikimedia.org', async ctx => {
+        bot.hears('🗃 Source: commons.wikimedia.org', async ctx => {
             let user_id = ctx.message.from.id;
             await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
             let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia_commons);
