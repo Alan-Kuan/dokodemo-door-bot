@@ -12,6 +12,11 @@ const api_urls = {
 
 const user_agent = `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env.CONTACT })`;
 
+// remove HTML tags that are not supported by Telegram
+function sanitizeHTML(origin) {
+    return origin.replace(/<(?!\/?(b|(strong)|i|(em)|u|(ins)|s|(strike)|(del)|a|(code)|(pre))(>|\ .*?>))\/?.*?>/g, '');
+}
+
 async function getImageFileName(title, src) {
     const res = axios.get(api_urls[src], {
             headers: {
@@ -78,11 +83,7 @@ async function getImageCredit(title, src) {
         })
         .then(res => {
             let metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
-            let artist = metadata.Artist.value
-                // remove html tags, since there may be tags that cannot be rendered on Telegram
-                .replace(/<.*?>/g, '').replace(/<\/.*?>/g, '')
-                // replace multiple white spaces with one space
-                .replace(/\s\s+/g, ' ');
+            let artist = sanitizeHTML(metadata.Artist.value);
             let license = metadata.LicenseShortName.value;
             let license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
             return { artist, license, license_url };
@@ -122,8 +123,8 @@ async function getImageCaption(title, src) {
             })
         })
         .then(res => {
-            let caption = res.data.parse.text.replace(/\\"/g, '"').replace(/\\n/g, '').replace(/\\r/g, '')
-                .replace(/<p>/g, '').replace(/<\/p>/g, '');
+            let caption = sanitizeHTML(res.data.parse.text)
+                .replace(/\\"/g, '"').replace(/\\n/g, '').replace(/\\r/g, '');
             switch(src) {
             case IMG_SRCS.wikimedia_commons:
                  caption = caption.replace(/href="\/wiki/g, 'href="https://commons.wikimedia.org/wiki');
