@@ -1,12 +1,18 @@
 {
   "name": "dokokemo-door-bot",
   "version": "1.0.0",
-  "author": "Alan-Kuan <kuanhaoan@gmail.com>",
+  "author": "Alan-Kuan",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
     "serverless-postgres": "^1.9.4",
     "telegraf": "^4.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "rewire": "^5.0.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
 }
