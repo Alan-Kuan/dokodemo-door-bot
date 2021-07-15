@@ -14,7 +14,8 @@ const user_agent = `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env
 
 // remove HTML tags that are not supported by Telegram
 function sanitizeHTML(origin) {
-    return origin.replace(/<(?!\/?(b|(strong)|i|(em)|u|(ins)|s|(strike)|(del)|a|(code)|(pre))(>|\ .*?>))\/?.*?>/g, '');
+    return origin.replace(/<(?!\/?(?:b|strong|i|em|u|ins|s|strike|del|a|code|pre)(?:>|\ .*?>))\/?.*?>/g, '')
+        .replace(/^\s*\r?\n/gm, '');  // remove empty lines
 }
 
 async function getImageFileName(title, src) {
