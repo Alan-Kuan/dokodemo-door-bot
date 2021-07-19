@@ -1,4 +1,7 @@
 .env
 .env.example
-tests/*
+tests/
+images/
 LICENSE
+README.md
+.github/
