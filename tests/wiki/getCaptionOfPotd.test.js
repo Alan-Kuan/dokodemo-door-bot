@@ -19,8 +19,8 @@ const test_cases = [{
     }];
 
 for(let test_case of test_cases) {
-    test(`Test getCaptionOfPotd() in src/wiki.js with source of ${ srcs[test_case.src] }`, async () => {
-        let actual = await getCaptionOfPotd(test_case.date, test_case.src);
-        expect(actual).toBe(test_case.expected);
+    test(`Test getCaptionOfPotd() in src/wiki.js with source of ${ srcs[test_case.src] }`, () => {
+        return expect(getCaptionOfPotd(test_case.date, test_case.src))
+            .resolves.toBe(test_case.expected);
     });
 }

@@ -4,7 +4,7 @@ const wiki = rewire('../../src/wiki.js');
 const sanitizeHTML = wiki.__get__('sanitizeHTML');
 
 test('Test sanitizeHTML() in src/wiki.js', () => {
-    let input = `<b>bold</b>, <strong>bold</strong>
+    let test_case = `<b>bold</b>, <strong>bold</strong>
 <i>italic</i>, <em>italic</em>
 <u>underline</u>, <ins>underline</ins>
 <s>strikethrough</s>, <strike>strikethrough</strike>, <del>strikethrough</del>
@@ -41,6 +41,5 @@ span
   unordered list item
   ordered list item
 `;
-    let actual = sanitizeHTML(input);
-    expect(actual).toBe(expected);
+    expect(sanitizeHTML(test_case)).toBe(expected);
 });

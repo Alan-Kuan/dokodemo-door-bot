@@ -22,8 +22,8 @@ const test_cases = [{
     }];
 
 for(let test_case of test_cases) {
-    test(`Test getImageCaption() in src/wiki.js with source of ${ srcs[test_case.src] }`, async () => {
-        let actual = await getImageCaption(test_case.title, test_case.src);
-        expect(actual).toBe(test_case.expected);
+    test(`Test getImageCaption() in src/wiki.js with source of ${ srcs[test_case.src] }`, () => {
+        return expect(getImageCaption(test_case.title, test_case.src))
+            .resolves.toBe(test_case.expected);
     });
 }
