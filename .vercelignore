@@ -1,6 +1,6 @@
 .env
 .env.example
-tests/
+__tests__/
 images/
 LICENSE
 README.md
