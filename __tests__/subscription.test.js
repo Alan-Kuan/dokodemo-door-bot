@@ -81,8 +81,8 @@ describe('Test subscription.js.', () => {
             await db.query("INSERT INTO user_preference VALUES(2468, 'e')");
             await db.query("INSERT INTO user_preference VALUES(6666, 'e')");
             await db.clean();
-            expect(await getSubscribers('c')).toEqual([1357]);
-            expect(await getSubscribers('e')).toEqual([2468, 6666]);
+            expect(await getSubscribers('c')).toEqual(['1357']);
+            expect(await getSubscribers('e')).toEqual(['2468', '6666']);
         });
     });
 
