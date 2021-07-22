@@ -1,11 +1,7 @@
-name: Test Dokodemo Door Bot before pushing it to `master`
-on:
-  deployment_status:
-    branches:
-      - test
+name: Test Dokodemo Door Bot when receiving pull request
+on: pull_request
 jobs:
   test:
-    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -28,8 +24,3 @@ jobs:
         run: yarn install
       - name: Run unit tests 
         run: yarn test
-      - name: Push to `master`
-        run: |
-          git fetch --unshallow
-          git checkout -b master
-          git push origin master

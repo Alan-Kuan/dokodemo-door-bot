@@ -1,0 +1,34 @@
+name: Test Dokodemo Door Bot before pushing it to `master`
+on:
+  push:
+    branches:
+      - test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout `test`
+        uses: actions/checkout@v2
+      - name: Setup Node.js v14 environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install Node dependencies
+        run: yarn install
+      - name: Run unit tests 
+        run: yarn test
+      - name: Push to `master`
+        run: |
+          git fetch --unshallow
+          git checkout -b master
+          git push origin master
