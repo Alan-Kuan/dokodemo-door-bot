@@ -5,3 +5,5 @@ images/
 LICENSE
 README.md
 .github/
+jest.config.js
+.jest/
