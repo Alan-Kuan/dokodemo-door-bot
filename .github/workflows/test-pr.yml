@@ -1,4 +1,4 @@
-name: Test Dokodemo Door Bot when receiving pull request
+name: Pull Request Test  
 on: pull_request
 jobs:
   test:

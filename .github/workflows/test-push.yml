@@ -1,4 +1,4 @@
-name: Test Dokodemo Door Bot before pushing it to `master`
+name: Production Deployment Test 
 on:
   push:
     branches:
