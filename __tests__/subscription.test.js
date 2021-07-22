@@ -37,33 +37,33 @@ describe('Test subscription.js.', () => {
     // therefore they're separated into 2 descriptions.
     describe("Test subscribe() when the user haven't subscribe", () => {
         it("should return true", () => {
-            return expect(subscribe(1234)).resolves.toBeTrue();
+            return expect(subscribe(1234)).resolves.toBe(true);
         });
     });
     describe('Test subscribe() when the user have subscribed', () => {
         it("should return false", () => {
-            return expect(subscribe(1234)).resolves.toBeFalse();
+            return expect(subscribe(1234)).resolves.toBe(false);
         });
     });
     describe('Test haveSubscribed()', () => {
         it('should return true if the user have subscribed', () => {
-            return expect(haveSubscribed(1234)).resolves.toBeTrue();
+            return expect(haveSubscribed(1234)).resolves.toBe(true);
         });
         it("should return false if the user havn't subscribe", () => {
-            return expect(haveSubscribed(5678)).resolves.toBeFalse();
+            return expect(haveSubscribed(5678)).resolves.toBe(false);
         });
     });
     describe('Test unsubscribe()', () => {
         it('should return true if the user have subscribed', () => {
-            return expect(unsubscribe(1234)).resolves.toBeTrue();
+            return expect(unsubscribe(1234)).resolves.toBe(true);
         });
         it("should return false if the user haven't subscribe", () => {
-            return expect(unsubscribe(5678)).resolves.toBeFalse();
+            return expect(unsubscribe(5678)).resolves.toBe(false);
         });
     });
     describe("Test getSubscribers() when there's no subscribers", () => {
         it('should return an empty list', () => {
-            return expect(getSubscribers()).resolves.haveSize(0);
+            return expect(getSubscribers()).resolves.toHaveLength(0);
         });
     });
     describe("Test getSubscribers() when there are some subscribers", () => {
