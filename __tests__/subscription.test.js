@@ -33,7 +33,8 @@ describe('Test subscription.js.', () => {
 
     afterAll(async () => {
         await db.connect();
-        await db.query(`DROP TABLE subscribers`);
+        await db.query('DROP TABLE subscribers');
+        await db.query('DROP TABLE user_preference');
         await db.end();
     });
 
