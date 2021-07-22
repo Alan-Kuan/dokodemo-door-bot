@@ -22,7 +22,7 @@ describe('Test subscription.js.', () => {
         await db.connect();
         await db.query(`CREATE TABLE subscribers(
                             user_id bigint NOT NULL,
-                            received_hour smallint NOT NULL
+                            received_hour smallint NOT NULL DEFAULT 8
                         )`);
         await db.query(`CREATE TABLE user_preference(
                             user_id bigint NOT NULL,
