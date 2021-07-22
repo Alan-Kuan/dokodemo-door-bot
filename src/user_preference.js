@@ -8,7 +8,7 @@ const db = new pg({
         port: 5432,
         debug: true,
         delayMs: 3000
-    }, maxConnections=5);
+    }, manualMaxConnections=true, maxConnections=5);
 
 async function getImgSource(user_id) {
     await db.connect();

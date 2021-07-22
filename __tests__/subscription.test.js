@@ -18,7 +18,7 @@ describe('Test subscription.js.', () => {
     let db;
 
     beforeAll(async () => {
-        db = new pg(db_config, maxConnections=5)
+        db = new pg(db_config, manualMaxConnections=true, maxConnections=5)
         await db.connect();
         await db.query(`CREATE TABLE subscribers(
                             user_id bigint NOT NULL,
