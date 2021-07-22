@@ -24,6 +24,10 @@ describe('Test subscription.js.', () => {
                             user_id bigint NOT NULL,
                             received_hour smallint NOT NULL
                         )`);
+        await db.query(`CREATE TABLE user_preference(
+                            user_id bigint NOT NULL,
+                            img_source char
+                        )`);
         await db.clean();
     });
 
@@ -72,8 +76,12 @@ describe('Test subscription.js.', () => {
             await db.query('INSERT INTO subscribers VALUES(1357)');
             await db.query('INSERT INTO subscribers VALUES(2468)');
             await db.query('INSERT INTO subscribers VALUES(6666)');
+            await db.query("INSERT INTO user_preference VALUES(1357, 'c')");
+            await db.query("INSERT INTO user_preference VALUES(2468, 'e')");
+            await db.query("INSERT INTO user_preference VALUES(6666, 'e')");
             await db.clean();
-            return expect(getSubscribers()).resolves.toEqual([1357, 2468, 6666]);
+            expect(await getSubscribers('c')).toEqual([1357]);
+            expect(await getSubscribers('e')).toEqual([2468, 6666]);
         });
     });
 
