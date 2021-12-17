@@ -38,39 +38,47 @@ module.exports = async (req, res) => {
 
     // Send Today's Picture
     const f_pic = async ctx => {
-        let date = new Date().toISOString().split('T')[0];
-        let src = await getImgSource(ctx.message.from.id);
-        let img_url = await getUrlOfPotd(date, src);
-        let img_caption = await getCaptionOfPotd(date, src);
-        ctx.replyWithPhoto(img_url, {
-            caption: img_caption,
-            parse_mode: 'HTML',
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: 'Show Credit',
-                    callback_data: `credit ${date} ${src}`
-                }]]
-            }
-        });
+        try {
+            let date = new Date().toISOString().split('T')[0];
+            let src = await getImgSource(ctx.message.from.id);
+            let img_url = await getUrlOfPotd(date, src);
+            let img_caption = await getCaptionOfPotd(date, src);
+            ctx.replyWithPhoto(img_url, {
+                caption: img_caption,
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: 'Show Credit',
+                        callback_data: `credit ${date} ${src}`
+                    }]]
+                }
+            });
+        } catch (err) {
+            ctx.reply('An error occurred internally!');
+        }
     };
 
     // Send a Random Picture
     const f_rand = async ctx => {
-        let date = getRandomDate(new Date(2007, 0, 1), new Date())
-            .toISOString().split('T')[0];
-        let src = await getImgSource(ctx.message.from.id);
-        let img_url = await getUrlOfPotd(date, src);
-        let img_caption = await getCaptionOfPotd(date, src);
-        ctx.replyWithPhoto(img_url, {
-            caption: `[${date}]\n${img_caption}`,
-            parse_mode: 'HTML',
-            reply_markup: {
-                inline_keyboard: [[{
-                    text: 'Show Credit',
-                    callback_data: `credit ${date} ${src}`
-                }]]
-            }
-        });
+        try {
+            let date = getRandomDate(new Date(2007, 0, 1), new Date())
+                .toISOString().split('T')[0];
+            let src = await getImgSource(ctx.message.from.id);
+            let img_url = await getUrlOfPotd(date, src);
+            let img_caption = await getCaptionOfPotd(date, src);
+            ctx.replyWithPhoto(img_url, {
+                caption: `[${date}]\n${img_caption}`,
+                parse_mode: 'HTML',
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: 'Show Credit',
+                        callback_data: `credit ${date} ${src}`
+                    }]]
+                }
+            });
+        } catch (err) {
+            ctx.reply('An error occurred internally!');
+        }
     };
 
     // Subscribe

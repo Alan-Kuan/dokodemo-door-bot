@@ -33,6 +33,9 @@ async function getImageFileName(title, src) {
         })
         .then(res => {
             return res.data.expandtemplates.wikitext;
+        })
+        .catch(err => {
+            console.log(err);
         });
     return res;
 }
