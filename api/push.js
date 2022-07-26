@@ -1,7 +1,7 @@
 'use strict';
 
 const { Telegram } = require('telegraf');
-const { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } = require('../src/wiki.js');
+const { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } = require('../src/wiki');
 const { getSubscribers } = require('../src/subscription.js');
 
 module.exports = async (req, res) => {

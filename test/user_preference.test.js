@@ -1,5 +1,6 @@
 const pg = require('serverless-postgres');
 const { getImgSource, setImgSource } = require('../src/user_preference.js');
+const { IMG_SRCS } = require('../src/wiki');
 
 const db_config = {
         host: process.env.PG_HOST,
@@ -19,7 +20,7 @@ describe('Test src/user_preference.js', () => {
         await db.connect();
         await db.query(`CREATE TABLE user_preference(
                             user_id bigint NOT NULL,
-                            img_source char
+                            img_source smallint
                         )`);
         await db.clean();
     });
@@ -33,29 +34,29 @@ describe('Test src/user_preference.js', () => {
     describe('Test setImgSource()', () => {
         it('shoud update the record if user_id exists in the table', async () => {
             await db.connect();
-            await db.query("INSERT INTO user_preference VALUES(123, 'e')");
+            await db.query(`INSERT INTO user_preference VALUES(123, ${ IMG_SRCS.wikipedia_en })`);
             await db.clean();
-            await setImgSource(123, 'c');
+            await setImgSource(123, IMG_SRCS.wikimedia_commons);
             await db.connect();
             let res = await db.query('SELECT img_source FROM user_preference WHERE user_id = 123');
             await db.clean();
             expect(res.rowCount).toBe(1);
-            expect(res.rows[0].img_source).toBe('c');
+            expect(res.rows[0].img_source).toBe(IMG_SRCS.wikimedia_commons);
         });
 
         it("should insert a new record if user_id doesn't exist in the table", async () => {
-            await setImgSource(456, 'e');
+            await setImgSource(456, IMG_SRCS.wikipedia_en);
             await db.connect();
             let res = await db.query('SELECT img_source FROM user_preference WHERE user_id = 456');
             await db.clean();
             expect(res.rowCount).toBe(1);
-            expect(res.rows[0].img_source).toBe('e');
+            expect(res.rows[0].img_source).toBe(IMG_SRCS.wikipedia_en);
         });
     });
 
     describe('Test getImgSource()', () => {
         it('should return prefered image source if user_id exists in the table', () => {
-            return expect(getImgSource(123)).resolves.toBe('c');
+            return expect(getImgSource(123)).resolves.toBe(IMG_SRCS.wikimedia_commons);
         });
 
         it("should return 'null' if user_id doesn't exist in the table", () => {

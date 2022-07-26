@@ -1,7 +1,4 @@
-const rewire = require('rewire');
-const wiki = rewire('../../src/wiki.js');
-
-const sanitizeHTML = wiki.__get__('sanitizeHTML');
+const { sanitizeHTML } = require('../../src/wiki/misc.js');
 
 test('Test sanitizeHTML() in src/wiki.js', () => {
     let test_case = `<b>bold</b>, <strong>bold</strong>

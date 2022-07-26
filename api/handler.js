@@ -1,7 +1,7 @@
 'use strict';
 
 const { Telegraf, Markup } = require('telegraf');
-const { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } = require('../src/wiki.js');
+const { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } = require('../src/wiki');
 const { haveSubscribed, subscribe, unsubscribe } = require('../src/subscription.js');
 const { getImgSource, setImgSource } = require('../src/user_preference.js');
 

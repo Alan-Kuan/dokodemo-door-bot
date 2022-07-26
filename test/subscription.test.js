@@ -3,6 +3,7 @@ const { haveSubscribed,
         subscribe,
         unsubscribe,
         getSubscribers } = require('../src/subscription.js');
+const { IMG_SRCS } = require('../src/wiki');
 
 const db_config = {
         host: process.env.PG_HOST,
@@ -26,7 +27,7 @@ describe('Test subscription.js.', () => {
                         )`);
         await db.query(`CREATE TABLE user_preference(
                             user_id bigint NOT NULL,
-                            img_source char
+                            img_source smallint
                         )`);
         await db.clean();
     });
@@ -77,12 +78,12 @@ describe('Test subscription.js.', () => {
             await db.query('INSERT INTO subscribers VALUES(1357)');
             await db.query('INSERT INTO subscribers VALUES(2468)');
             await db.query('INSERT INTO subscribers VALUES(6666)');
-            await db.query("INSERT INTO user_preference VALUES(1357, 'c')");
-            await db.query("INSERT INTO user_preference VALUES(2468, 'e')");
-            await db.query("INSERT INTO user_preference VALUES(6666, 'e')");
+            await db.query(`INSERT INTO user_preference VALUES(1357, ${ IMG_SRCS.wikimedia_commons })`);
+            await db.query(`INSERT INTO user_preference VALUES(2468, ${ IMG_SRCS.wikipedia_en })`);
+            await db.query(`INSERT INTO user_preference VALUES(6666, ${ IMG_SRCS.wikipedia_en })`);
             await db.clean();
-            expect(await getSubscribers('c')).toEqual(['1357']);
-            expect(await getSubscribers('e')).toEqual(['2468', '6666']);
+            expect(await getSubscribers(IMG_SRCS.wikimedia_commons)).toEqual(['1357']);
+            expect(await getSubscribers(IMG_SRCS.wikipedia_en)).toEqual(['2468', '6666']);
         });
     });
 
