@@ -68,7 +68,7 @@ describe('Test subscription.js.', () => {
         });
     });
     describe("Test unsubscribe() that it really remove the subscriber", () => {
-        it('should return an empty list', () => {
+        it('should return an empty list', async () => {
             let res = await db.query('SELECT user_id FROM subscribers');
             return expect(res.rows).toHaveLength(0);
         });
