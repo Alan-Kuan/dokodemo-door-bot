@@ -31,8 +31,10 @@ req.interceptors.request.use(
     err => Promise.reject(err)
 );
 
-async function getImageFileName(title, src) {
-    return req.get(URLS[src].api_url, {
+async function getImageFileNameOfDate(date, src) {
+    let template = tmpl.getTemplate(date, src, 'image');
+    let get_filename = title => {
+        return req.get(URLS[src].api_url, {
             params: {
                 action: 'expandtemplates',
                 prop: 'wikitext',
@@ -41,6 +43,16 @@ async function getImageFileName(title, src) {
         })
         .then(res => res.data.expandtemplates.wikitext)
         .catch(err => console.error(err));
+    };
+    return get_filename(template)
+        .then(filename => {
+            // if there are multiple pictures
+            if (filename === '{{{image}}}') {
+                template = template.replace('image', 'image1');
+                return get_filename(template);
+            }
+            return filename;
+        });
 }
 
 async function getImageUrl(filename, src) {
@@ -107,8 +119,7 @@ async function getImageCaption(title, src) {
 }
 
 async function getUrlOfPotd(date, src) {
-    let template = tmpl.getTemplate(date, src, 'image');
-    let filename = await getImageFileName(template, src);
+    let filename = await getImageFileNameOfDate(date, src);
     let img_url = await getImageUrl(filename, src);
     let segments = img_url.split('/');
     segments.splice(5, 0, 'thumb');
@@ -124,8 +135,7 @@ async function getCaptionOfPotd(date, src) {
 }
 
 async function getCreditOfPotd(date, src) {
-    let template = tmpl.getTemplate(date, src, 'image');
-    let filename = await getImageFileName(template, src);
+    let filename = await getImageFileNameOfDate(date, src);
     let { artist, license, license_url } = await getImageCredit(filename, src);
     if (license_url === null)
         return `Credit: ${ artist }\nLicense: ${ license }`;
