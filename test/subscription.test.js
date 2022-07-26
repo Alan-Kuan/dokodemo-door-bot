@@ -67,9 +67,10 @@ describe('Test subscription.js.', () => {
             return expect(unsubscribe(5678)).resolves.toBe(false);
         });
     });
-    describe("Test getSubscribers() when there's no subscribers", () => {
+    describe("Test unsubscribe() that it really remove the subscriber", () => {
         it('should return an empty list', () => {
-            return expect(getSubscribers()).resolves.toHaveLength(0);
+            let res = await db.query('SELECT user_id FROM subscribers');
+            return expect(res.rows).toHaveLength(0);
         });
     });
     describe("Test getSubscribers() when there are some subscribers", () => {
