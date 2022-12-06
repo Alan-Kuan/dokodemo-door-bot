@@ -114,7 +114,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             disable_web_page_preview: true
         });
     }
-    
+
     try {
         const { body, query } = req;
 
