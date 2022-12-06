@@ -70,7 +70,7 @@ describe('Test subscription.js.', () => {
     describe("Test unsubscribe() that it really remove the subscriber", () => {
         it('should return an empty list', async () => {
             let res = await db.query('SELECT user_id FROM subscribers');
-            return expect(res.rows).toHaveLength(0);
+            expect(res.rows).toHaveLength(0);
         });
     });
     describe("Test getSubscribers() when there are some subscribers", () => {

@@ -1,5 +1,5 @@
 const pg = require('serverless-postgres');
-const { getImgSource, setImgSource } = require('../src/user_preference.js');
+const { getImgSource, setImgSource, removeImgSource } = require('../src/user_preference.js');
 const { IMG_SRCS } = require('../src/wiki');
 
 const db_config = {
@@ -32,7 +32,7 @@ describe('Test src/user_preference.js', () => {
     });
 
     describe('Test setImgSource()', () => {
-        it('shoud update the record if user_id exists in the table', async () => {
+        it('should update the record if user_id exists in the table', async () => {
             await db.connect();
             await db.query(`INSERT INTO user_preference VALUES(123, ${ IMG_SRCS.wikipedia_en })`);
             await db.clean();
@@ -61,6 +61,17 @@ describe('Test src/user_preference.js', () => {
 
         it("should return 'null' if user_id doesn't exist in the table", () => {
             return expect(getImgSource(789)).resolves.toBeNull();
+        });
+    });
+
+    describe('Test removeImgSource()', () => {
+        it('should remove the record if user_id exists in the table', async () => {
+            await setImgSource(123, IMG_SRCS.wikipedia_en);
+            await removeImgSource(123);
+            await db.connect();
+            let res = await db.query('SELECT user_id FROM user_preference WHERE user_id = 123');
+            await db.clean();
+            expect(res.rows).toHaveLength(0);
         });
     });
 });
