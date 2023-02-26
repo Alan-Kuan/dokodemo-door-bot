@@ -11,8 +11,9 @@ const db_config = {
         user: process.env.PG_USER,
         password: process.env.PG_PASSWD,
         port: 5432,
+        // only in serverless-postgres
+        delayMs: 3000,
         debug: true,
-        delayMs: 3000
     };
 
 describe('Test subscription.js.', () => {
