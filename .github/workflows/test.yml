@@ -25,9 +25,9 @@ jobs:
         with:
           node-version: '14'
       - name: Install Node dependencies
-        run: yarn install
+        run: pnpm install
       - name: Run unit tests
-        run: yarn test
+        run: pnpm test
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
