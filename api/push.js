@@ -6,7 +6,7 @@ import { removeImgSource } from '../src/user_preference.js';
 export default async function handler(req, res) {
     try {
         const { body } = req;
-        if (!body.key || body.key !== process.env.MY_API_KEY) {
+        if (!body || !body.key || body.key !== process.env.MY_API_KEY) {
             res.status(403).send('Permission Denied!');
             return;
         }
