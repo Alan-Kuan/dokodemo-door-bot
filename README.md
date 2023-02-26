@@ -1,6 +1,5 @@
 # Dokodemo Door Bot
-[![Production Deployment Test](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-push.yml/badge.svg?branch=test)](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-push.yml)
-[![Pull Request Test](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-pr.yml/badge.svg)](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-pr.yml)
+[![Test before Deployment](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test.yml/badge.svg)](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test.yml)
 
 <img src="images/profile.png" width="128px" alt="bot profile" />
 
