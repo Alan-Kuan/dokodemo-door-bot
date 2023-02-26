@@ -1,11 +1,9 @@
-'use strict';
+import { Telegram } from 'telegraf';
+import { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } from '../src/wiki/index.js';
+import { getSubscribers, unsubscribe } from '../src/subscription.js';
+import { removeImgSource } from '../src/user_preference.js';
 
-const { Telegram } = require('telegraf');
-const { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } = require('../src/wiki');
-const { getSubscribers, unsubscribe } = require('../src/subscription.js');
-const { removeImgSource } = require('../src/user_preference.js');
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
     try {
         const { body } = req;
         if (!body.key || body.key !== process.env.MY_API_KEY) {
@@ -49,5 +47,4 @@ module.exports = async (req, res) => {
         console.log(err.toString());
         res.status(500).send('Internal Server Error!');
     }
-
-};
+}

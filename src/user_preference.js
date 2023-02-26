@@ -1,4 +1,4 @@
-const pg = require('serverless-postgres');
+import pg from 'serverless-postgres';
 
 const db = new pg({
         host: process.env.PG_HOST,
@@ -10,7 +10,7 @@ const db = new pg({
         delayMs: 3000
     }, manualMaxConnections=true, maxConnections=5);
 
-async function getImgSource(user_id) {
+export async function getImgSource(user_id) {
     await db.connect();
     let res = await db.query(`SELECT img_source FROM user_preference WHERE user_id = ${user_id}`);
     await db.clean();
@@ -20,7 +20,7 @@ async function getImgSource(user_id) {
     return res.rows[0].img_source;
 }
 
-async function setImgSource(user_id, src) {
+export async function setImgSource(user_id, src) {
     await db.connect();
     let res = await db.query(`UPDATE user_preference SET img_source = '${src}' WHERE user_id = ${user_id}`);
     if (res.rowCount === 0) {
@@ -29,10 +29,8 @@ async function setImgSource(user_id, src) {
     await db.clean();
 }
 
-async function removeImgSource(user_id) {
+export async function removeImgSource(user_id) {
     await db.connect();
     await db.query(`DELETE FROM user_preference WHERE user_id = ${user_id}`);
     await db.clean();
 }
-
-module.exports = { getImgSource, setImgSource, removeImgSource };

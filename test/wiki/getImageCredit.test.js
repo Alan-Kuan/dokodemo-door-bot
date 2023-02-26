@@ -1,5 +1,5 @@
-const { IMG_SRCS } = require('../../src/wiki');
-const rewire = require('rewire');
+import { IMG_SRCS } from '../../src/wiki/index.js';
+import rewire from 'rewire';
 const request = rewire('../../src/wiki/request.js');
 
 const getImageCredit = request.__get__('getImageCredit');

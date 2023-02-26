@@ -1,4 +1,4 @@
-const { IMG_SRCS } = require('./misc.js');
+import { IMG_SRCS } from './misc.js';
 
 const templates = {
     [IMG_SRCS.wikimedia_commons]: {
@@ -11,8 +11,6 @@ const templates = {
     },
 };
 
-function getTemplate(date,src, type) {
+export function getTemplate(date,src, type) {
     return templates[src][type](date);
 }
-
-module.exports = { getTemplate };

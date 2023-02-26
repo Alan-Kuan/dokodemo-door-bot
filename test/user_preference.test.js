@@ -1,6 +1,6 @@
-const pg = require('serverless-postgres');
-const { getImgSource, setImgSource, removeImgSource } = require('../src/user_preference.js');
-const { IMG_SRCS } = require('../src/wiki');
+import pg from 'serverless-postgres';
+import { getImgSource, setImgSource, removeImgSource } from '../src/user_preference.js';
+import { IMG_SRCS } from '../src/wiki/index.js';
 
 const db_config = {
         host: process.env.PG_HOST,

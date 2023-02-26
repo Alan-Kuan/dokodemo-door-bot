@@ -1,9 +1,7 @@
-'use strict';
-
-const { Telegraf, Markup } = require('telegraf');
-const { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } = require('../src/wiki');
-const { haveSubscribed, subscribe, unsubscribe } = require('../src/subscription.js');
-const { getImgSource, setImgSource } = require('../src/user_preference.js');
+import { Telegraf, Markup } from 'telegraf';
+import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } from '../src/wiki/index.js';
+import { haveSubscribed, subscribe, unsubscribe } from '../src/subscription.js';
+import { getImgSource, setImgSource } from '../src/user_preference.js';
 
 // Utilities
 function getRandomDate(begin, end) {
@@ -25,8 +23,7 @@ function getMenu(user_id, subscribed, src) {
     return menu;
 }
 
-module.exports = async (req, res) => {
-
+export default async function handler(req, res) {
     const help_list = `Hope this can help you!
 /start: open the menu
 /pic: send me picture of the day
@@ -207,5 +204,4 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         console.log(err.toString());
         res.status(500).send('Internal Server Error!');
     }
-
-};
+}

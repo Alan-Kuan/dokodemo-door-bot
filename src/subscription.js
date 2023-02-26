@@ -1,4 +1,4 @@
-const pg = require('serverless-postgres');
+import pg from 'serverless-postgres';
 
 const db = new pg({
         host: process.env.PG_HOST,
@@ -10,14 +10,14 @@ const db = new pg({
         delayMs: 3000
     }, manualMaxConnections=true, maxConnections=5);
 
-async function haveSubscribed(user_id) {
+export async function haveSubscribed(user_id) {
     await db.connect();
     let res = await db.query(`SELECT user_id FROM subscribers WHERE user_id = ${user_id}`);
     await db.clean();
     return res.rowCount > 0;
 }
 
-async function subscribe(user_id) {
+export async function subscribe(user_id) {
     await db.connect();
     let res = await db.query(`SELECT user_id FROM subscribers WHERE user_id = ${user_id}`);
     // have subscribed
@@ -30,18 +30,16 @@ async function subscribe(user_id) {
     return true;
 }
 
-async function unsubscribe(user_id) {
+export async function unsubscribe(user_id) {
     await db.connect();
     let res = await db.query(`DELETE FROM subscribers WHERE user_id = ${user_id}`);
     await db.clean();
     return res.rowCount > 0;
 }
 
-async function getSubscribers(src) {
+export async function getSubscribers(src) {
     await db.connect();
     let res = await db.query(`SELECT user_id FROM subscribers NATURAL JOIN user_preference WHERE img_source = '${src}'`);
     await db.clean();
     return res.rows.map(e => e.user_id);
 }
-
-module.exports = { haveSubscribed, subscribe, unsubscribe, getSubscribers };

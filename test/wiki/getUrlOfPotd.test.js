@@ -1,4 +1,4 @@
-const { getUrlOfPotd, IMG_SRCS } = require('../../src/wiki');
+import { getUrlOfPotd, IMG_SRCS } from '../../src/wiki/index.js';
 
 const srcs = {
     [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',

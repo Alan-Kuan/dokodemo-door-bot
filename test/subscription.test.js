@@ -1,9 +1,9 @@
-const pg = require('serverless-postgres');
-const { haveSubscribed,
+import pg from 'serverless-postgres';
+import { haveSubscribed,
         subscribe,
         unsubscribe,
-        getSubscribers } = require('../src/subscription.js');
-const { IMG_SRCS } = require('../src/wiki');
+        getSubscribers } from '../src/subscription.js';
+import { IMG_SRCS } from '../src/wiki/index.js';
 
 const db_config = {
         host: process.env.PG_HOST,

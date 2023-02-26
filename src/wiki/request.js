@@ -1,6 +1,6 @@
-const axios = require('axios');
-const tmpl = require('./template.js');
-const { IMG_SRCS, sanitizeHTML } = require('./misc.js');
+import axios from 'axios';
+import * as tmpl from './template.js';
+import { IMG_SRCS, sanitizeHTML } from './misc.js';
 
 const URLS = {
     [IMG_SRCS.wikimedia_commons]: {
@@ -118,7 +118,7 @@ async function getImageCaption(title, src) {
         .catch(err => console.error(err));
 }
 
-async function getUrlOfPotd(date, src) {
+export async function getUrlOfPotd(date, src) {
     let filename = await getImageFileNameOfDate(date, src);
     let img_url = await getImageUrl(filename, src);
     let segments = img_url.split('/');
@@ -128,13 +128,13 @@ async function getUrlOfPotd(date, src) {
     return img_url;
 }
 
-async function getCaptionOfPotd(date, src) {
+export async function getCaptionOfPotd(date, src) {
     let template = tmpl.getTemplate(date, src, 'caption');
     let img_caption = await getImageCaption(template, src);
     return img_caption;
 }
 
-async function getCreditOfPotd(date, src) {
+export async function getCreditOfPotd(date, src) {
     let filename = await getImageFileNameOfDate(date, src);
     let { artist, license, license_url } = await getImageCredit(filename, src);
     if (license_url === null)
@@ -142,5 +142,3 @@ async function getCreditOfPotd(date, src) {
     else
         return `Credit: ${ artist }\nLicense: <a href="${ license_url }">${ license }</a>`;
 }
-
-module.exports = { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd };

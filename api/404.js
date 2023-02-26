@@ -1,5 +1,3 @@
-'use strict';
-
-module.exports = (req, res) => {
+export default function handler(_, res) {
     res.status(404).send('Not Found');
-};
+}
