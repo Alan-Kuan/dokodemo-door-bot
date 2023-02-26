@@ -1,8 +1,9 @@
-name: Production Deployment Test 
+name: Test before Deployment
 on:
+  pull_request:
   push:
     branches:
-      - test
+      - master
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -17,7 +18,7 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Checkout `test`
+      - name: Checkout current commit
         uses: actions/checkout@v2
       - name: Setup Node.js v14 environment
         uses: actions/setup-node@v2
@@ -25,10 +26,11 @@ jobs:
           node-version: '14'
       - name: Install Node dependencies
         run: yarn install
-      - name: Run unit tests 
+      - name: Run unit tests
         run: yarn test
-      - name: Push to `master`
-        run: |
-          git fetch --unshallow
-          git checkout -b master
-          git push origin master
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
