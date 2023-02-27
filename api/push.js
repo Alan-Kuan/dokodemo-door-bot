@@ -44,7 +44,7 @@ export default async function handler(req, res) {
         res.status(200).send('OK');
     } catch (err) {
         console.error('Error occurred in handler.');
-        console.log(err.toString());
+        console.error(err.message);
         res.status(500).send('Internal Server Error!');
     }
 }

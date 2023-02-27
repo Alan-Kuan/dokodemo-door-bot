@@ -201,7 +201,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         res.status(200).send('OK');
     } catch(err) {
         console.error('Error occurred in handler.');
-        console.log(err.toString());
+        console.error(err.message);
         res.status(500).send('Internal Server Error!');
     }
 }
