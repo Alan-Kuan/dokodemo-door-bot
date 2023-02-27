@@ -1,6 +1,6 @@
-import { sanitizeHTML } from '../../src/wiki/misc.js';
+import { sanitizeHTML } from '../../lib/wiki/misc.js';
 
-test('Test sanitizeHTML() in src/wiki.js', () => {
+test('Test sanitizeHTML() in wiki.js', () => {
     let test_case = `<b>bold</b>, <strong>bold</strong>
 <i>italic</i>, <em>italic</em>
 <u>underline</u>, <ins>underline</ins>

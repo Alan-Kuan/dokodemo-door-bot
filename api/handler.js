@@ -1,7 +1,7 @@
 import { Telegraf, Markup } from 'telegraf';
-import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } from '../src/wiki/index.js';
-import { haveSubscribed, subscribe, unsubscribe } from '../src/subscription.js';
-import { getImgSource, setImgSource } from '../src/user_preference.js';
+import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } from '../lib/wiki/index.js';
+import { haveSubscribed, subscribe, unsubscribe } from '../lib/subscription.js';
+import { getImgSource, setImgSource } from '../lib/user_preference.js';
 
 // Utilities
 function getRandomDate(begin, end) {

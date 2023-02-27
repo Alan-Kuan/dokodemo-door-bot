@@ -1,6 +1,6 @@
-import { IMG_SRCS } from '../../src/wiki/index.js';
+import { IMG_SRCS } from '../../lib/wiki/index.js';
 import rewire from 'rewire';
-const request = rewire('../../src/wiki/request.js');
+const request = rewire('../../lib/wiki/request.js');
 
 const getImageFileNameOfDate = request.__get__('getImageFileNameOfDate');
 
@@ -28,7 +28,7 @@ const test_cases = [
 ];
 
 for (let test_case of test_cases) {
-    test(`Test getImageFileNameOfDate() in src/wiki.js with source of ${ srcs[test_case.src] }`, () => {
+    test(`Test getImageFileNameOfDate() in wiki.js with source of ${ srcs[test_case.src] }`, () => {
         return expect(getImageFileNameOfDate(test_case.date, test_case.src))
             .resolves.toBe(test_case.expected);
     });

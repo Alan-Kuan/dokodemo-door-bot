@@ -1,7 +1,7 @@
 import { Telegram } from 'telegraf';
-import { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } from '../src/wiki/index.js';
-import { getSubscribers, unsubscribe } from '../src/subscription.js';
-import { removeImgSource } from '../src/user_preference.js';
+import { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } from '../lib/wiki/index.js';
+import { getSubscribers, unsubscribe } from '../lib/subscription.js';
+import { removeImgSource } from '../lib/user_preference.js';
 
 export default async function handler(req, res) {
     try {

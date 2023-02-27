@@ -1,6 +1,6 @@
-import { IMG_SRCS } from '../../src/wiki/index.js';
+import { IMG_SRCS } from '../../lib/wiki/index.js';
 import rewire from 'rewire';
-const request = rewire('../../src/wiki/request.js');
+const request = rewire('../../lib/wiki/request.js');
 
 const getImageCredit = request.__get__('getImageCredit');
 
@@ -33,7 +33,7 @@ const test_cases = [
 ];
 
 for(let test_case of test_cases) {
-    test(`Test getImageCredit() in src/wiki.js with source of ${ srcs[test_case.src] }`, () => {
+    test(`Test getImageCredit() in wiki.js with source of ${ srcs[test_case.src] }`, () => {
         return expect(getImageCredit(test_case.filename, test_case.src))
             .resolves.toEqual(test_case.expected);
     });

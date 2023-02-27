@@ -1,4 +1,4 @@
-import { getCreditOfPotd, IMG_SRCS } from '../../src/wiki/index.js';
+import { getCreditOfPotd, IMG_SRCS } from '../../lib/wiki/index.js';
 
 const srcs = {
     [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',
@@ -19,7 +19,7 @@ const test_cases = [
 ];
 
 for (let test_case of test_cases) {
-    test(`Test getCreditOfPotd() in src/wiki.js with source of ${ srcs[test_case.src] }`, () => {
+    test(`Test getCreditOfPotd() in wiki.js with source of ${ srcs[test_case.src] }`, () => {
         return expect(getCreditOfPotd(test_case.date, test_case.src))
             .resolves.toBe(test_case.expected);
     });

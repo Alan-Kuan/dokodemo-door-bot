@@ -1,6 +1,6 @@
 import pg from 'serverless-postgres';
-import { getImgSource, setImgSource, removeImgSource } from '../src/user_preference.js';
-import { IMG_SRCS } from '../src/wiki/index.js';
+import { getImgSource, setImgSource, removeImgSource } from '../lib/user_preference.js';
+import { IMG_SRCS } from '../lib/wiki/index.js';
 
 const db_config = {
         host: process.env.PG_HOST,
@@ -13,7 +13,7 @@ const db_config = {
         debug: true,
     };
 
-describe('Test src/user_preference.js', () => {
+describe('Test user_preference.js', () => {
     let db;
 
     beforeAll(async () => {

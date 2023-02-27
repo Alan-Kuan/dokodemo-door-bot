@@ -2,8 +2,8 @@ import pg from 'serverless-postgres';
 import { haveSubscribed,
         subscribe,
         unsubscribe,
-        getSubscribers } from '../src/subscription.js';
-import { IMG_SRCS } from '../src/wiki/index.js';
+        getSubscribers } from '../lib/subscription.js';
+import { IMG_SRCS } from '../lib/wiki/index.js';
 
 const db_config = {
         host: process.env.PG_HOST,

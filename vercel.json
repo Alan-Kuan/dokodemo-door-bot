@@ -7,7 +7,7 @@
     ],
     "redirects": [
         {
-            "source": "/src/(.*)",
+            "source": "/lib/(.*)",
             "destination": "https://github.com/Alan-Kuan/dokodemo-door-bot"
         },
         {
