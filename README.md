@@ -7,7 +7,7 @@
 This is a Telegram bot that sends you **picture of the day** from [Wikipedia](https://en.wikipedia.org) and [Wikimedia Commons](https://commons.wikimedia.org).
 
 ## Environment
-- Node.js 14
+- Node.js 18
 
 ## Dependencies
 - telegraf.js
@@ -20,4 +20,4 @@ This is a Telegram bot that sends you **picture of the day** from [Wikipedia](ht
 - [cron-job.org](https://cron-job.org/en/)
 
 ## License
-Copyright (c) 2021 Alan Kuan. See [LICENSE](LICENSE) for details.
+Copyright (c) 2021-2023 Alan Kuan. See [LICENSE](LICENSE) for details.

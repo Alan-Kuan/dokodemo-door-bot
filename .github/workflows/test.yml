@@ -20,10 +20,10 @@ jobs:
     steps:
       - name: Checkout current commit
         uses: actions/checkout@v3
-      - name: Setup Node.js v14 environment
+      - name: Setup Node.js v18 environment
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: 18
       - name: Install Node dependencies
         run: pnpm install
       - name: Run unit tests
