@@ -1,14 +1,13 @@
 import { Telegraf, Markup } from 'telegraf';
-import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd, IMG_SRCS } from '../lib/wiki/index.js';
-import { haveSubscribed, subscribe, unsubscribe } from '../lib/subscription.js';
-import { getImgSource, setImgSource } from '../lib/user_preference.js';
+import wiki from '../lib/wiki/index.js';
+import user from '../lib/user/index.js';
 
 // Utilities
 function getRandomDate(begin, end) {
     return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
 }
 
-function getMenu(user_id, subscribed, src) {
+function getMenu(subscribed, src) {
     const menu = Markup.keyboard([
         [{ text: "🌄 Send me today's picture." }, { text: "🎲 Send me a random picture." }],
         [{ text: '🔔 Subscribe' }, { text: '🗃 Source: en.wikipedia.org' }],
@@ -17,7 +16,7 @@ function getMenu(user_id, subscribed, src) {
     if(subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕 Unsubscribe' };
     }
-    if(src === IMG_SRCS.wikipedia_en) {
+    if(src === wiki.IMG_SRCS.wikipedia_en) {
         menu.reply_markup.keyboard[1][1] = { text: '🗃 Source: commons.wikimedia.org' };
     }
     return menu;
@@ -37,16 +36,16 @@ export default async function handler(req, res) {
     const f_pic = async ctx => {
         try {
             let date = new Date().toISOString().split('T')[0];
-            let src = await getImgSource(ctx.message.from.id);
-            let img_url = await getUrlOfPotd(date, src);
-            let img_caption = await getCaptionOfPotd(date, src);
+            let pic_source = await user.getPicSource(ctx.message.from.id);
+            let img_url = await wiki.getUrlOfPotd(date, pic_source);
+            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
             ctx.replyWithPhoto(img_url, {
                 caption: img_caption,
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Credit',
-                        callback_data: `credit ${date} ${src}`
+                        callback_data: `credit ${date} ${pic_source}`
                     }]]
                 }
             });
@@ -60,16 +59,16 @@ export default async function handler(req, res) {
         try {
             let date = getRandomDate(new Date(2007, 0, 1), new Date())
                 .toISOString().split('T')[0];
-            let src = await getImgSource(ctx.message.from.id);
-            let img_url = await getUrlOfPotd(date, src);
-            let img_caption = await getCaptionOfPotd(date, src);
+            let pic_source = await user.getPicSource(ctx.message.from.id);
+            let img_url = await wiki.getUrlOfPotd(date, pic_source);
+            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
             ctx.replyWithPhoto(img_url, {
                 caption: `[${date}]\n${img_caption}`,
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Credit',
-                        callback_data: `credit ${date} ${src}`
+                        callback_data: `credit ${date} ${pic_source}`
                     }]]
                 }
             });
@@ -81,8 +80,8 @@ export default async function handler(req, res) {
     // Subscribe
     const f_sub = async ctx => {
         let user_id = ctx.message.from.id;
-        if(await subscribe(user_id)) {
-            let menu = getMenu(user_id, true, await getImgSource(user_id));
+        if(await user.subscribe(user_id)) {
+            let menu = getMenu(true, await user.getPicSource(user_id));
             ctx.reply('Great! I will send you picture of the day at 8:00 a.m. (UTC+8) every day.', menu);
         } else {
             ctx.reply('Already subscribed!');
@@ -92,11 +91,11 @@ export default async function handler(req, res) {
     // Unsubscribe
     const f_unsub = async ctx => {
         let user_id = ctx.message.from.id;
-        if(await unsubscribe(user_id)) {
-            let menu = getMenu(user_id, false, await getImgSource(user_id));
+        if(await user.unsubscribe(user_id)) {
+            let menu = getMenu(false, await user.getPicSource(user_id));
             ctx.reply('Got it! I will not send you pictures unless you ask for it.', menu);
         } else {
-            ctx.reply('Have not subscribe!');
+            ctx.reply('You have not subscribed!');
         }
     }
 
@@ -124,12 +123,15 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
 
         bot.start(async ctx => {
             let user_id = ctx.message.from.id;
-            let src = await getImgSource(user_id);
-            if(src === null) {
-                await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
-                src = IMG_SRCS.wikimedia_commons;
+
+            if (await user.hasBlockedBot(user_id)) {
+                await user.setUnBlockedBot(user_id);
+            } else {
+                await user.addUser(user_id);
             }
-            let menu = getMenu(user_id, await haveSubscribed(user_id), src);
+            
+            let pic_source = await user.getPicSource(user_id);
+            let menu = getMenu(await user.hasSubscribed(user_id), pic_source);
             ctx.reply("Let's find out something interesting!", menu);
         });
 
@@ -153,14 +155,14 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
 
         bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
             let user_id = ctx.message.from.id;
-            await setImgSource(user_id, IMG_SRCS.wikipedia_en);
-            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikipedia_en);
+            await user.setPicSource(user_id, wiki.IMG_SRCS.wikipedia_en);
+            let menu = getMenu(await user.hasSubscribed(user_id), wiki.IMG_SRCS.wikipedia_en);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
         bot.hears('🗃 Source: commons.wikimedia.org', async ctx => {
             let user_id = ctx.message.from.id;
-            await setImgSource(user_id, IMG_SRCS.wikimedia_commons);
-            let menu = getMenu(user_id, await haveSubscribed(user_id), IMG_SRCS.wikimedia_commons);
+            await user.setPicSource(user_id, wiki.IMG_SRCS.wikimedia_commons);
+            let menu = getMenu(await user.hasSubscribed(user_id), wiki.IMG_SRCS.wikimedia_commons);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 
@@ -168,7 +170,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             let tokens = ctx.callbackQuery.data.split(' ');
             let date = tokens[1];
             let src = tokens[2];
-            let credit = await getCreditOfPotd(date, src);
+            let credit = await wiki.getCreditOfPotd(date, src);
             ctx.editMessageCaption(credit, {
                 parse_mode: 'HTML',
                 reply_markup: {
@@ -184,7 +186,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             let tokens = ctx.callbackQuery.data.split(' ');
             let date = tokens[1];
             let src = tokens[2];
-            let caption = await getCaptionOfPotd(date, src);
+            let caption = await wiki.getCaptionOfPotd(date, src);
             ctx.editMessageCaption(`[${date}]\n${caption}`, {
                 parse_mode: 'HTML',
                 reply_markup: {
@@ -196,7 +198,9 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             })
         });
 
+        user.connect_db();
         await bot.handleUpdate(body);
+        await user.disconnect_db();
 
         res.status(200).send('OK');
     } catch(err) {

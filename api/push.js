@@ -1,7 +1,6 @@
 import { Telegram } from 'telegraf';
-import { getUrlOfPotd, getCaptionOfPotd, IMG_SRCS } from '../lib/wiki/index.js';
-import { getSubscribers, unsubscribe } from '../lib/subscription.js';
-import { removeImgSource } from '../lib/user_preference.js';
+import wiki from '../lib/wiki/index.js';
+import user from '../lib/user/index.js';
 
 export default async function handler(req, res) {
     try {
@@ -13,12 +12,14 @@ export default async function handler(req, res) {
 
         const tg = new Telegram(process.env.TG_TOKEN);
 
-        for (let key of Object.keys(IMG_SRCS)) {
+        user.connect_db();
+
+        for (let key of Object.keys(wiki.IMG_SRCS)) {
             let date = new Date().toISOString().split('T')[0];
-            let src = IMG_SRCS[key];
-            let img_url = await getUrlOfPotd(date, src);
-            let img_caption = await getCaptionOfPotd(date, src);
-            let subscribers = await getSubscribers(src);
+            let src = wiki.IMG_SRCS[key];
+            let img_url = await wiki.getUrlOfPotd(date, src);
+            let img_caption = await wiki.getCaptionOfPotd(date, src);
+            let subscribers = await user.getSubscribersByPicSource(src);
             for (let sub_id of subscribers) {
                 tg.sendPhoto(sub_id, img_url, {
                         caption: img_caption,
@@ -30,16 +31,17 @@ export default async function handler(req, res) {
                             }]]
                         }
                     })
-                    .catch(err => {
+                    .catch(async err => {
                         if (err.description == 'Forbidden: bot was blocked by the user') {
-                            unsubscribe(sub_id);
-                            removeImgSource(sub_id);
+                            await user.setBlockedBot(sub_id);
                         } else {
                             throw err;
                         }
                     });
             }
         }
+
+        await user.disconnect_db();
 
         res.status(200).send('OK');
     } catch (err) {
