@@ -14,26 +14,25 @@ export default async function handler(req, res) {
 
         user.connect_db();
 
-        for (let key of Object.keys(wiki.IMG_SRCS)) {
+        for (const pic_source of Object.values(wiki.IMG_SRCS)) {
             let date = new Date().toISOString().split('T')[0];
-            let src = wiki.IMG_SRCS[key];
-            let img_url = await wiki.getUrlOfPotd(date, src);
-            let img_caption = await wiki.getCaptionOfPotd(date, src);
-            let subscribers = await user.getSubscribersByPicSource(src);
-            for (let sub_id of subscribers) {
-                tg.sendPhoto(sub_id, img_url, {
+            let img_url = await wiki.getUrlOfPotd(date, pic_source);
+            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+            let subscriber_ids = await user.getSubscribersByPicSource(pic_source);
+            for (const user_id of subscriber_ids) {
+                tg.sendPhoto(user_id, img_url, {
                         caption: img_caption,
                         parse_mode: 'HTML',
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: 'Show Credit',
-                                callback_data: `credit ${date} ${src}`
+                                callback_data: `credit ${date} ${pic_source}`
                             }]]
                         }
                     })
                     .catch(async err => {
                         if (err.description == 'Forbidden: bot was blocked by the user') {
-                            await user.setBlockedBot(sub_id);
+                            await user.setBlockedBot(user_id);
                         } else {
                             throw err;
                         }

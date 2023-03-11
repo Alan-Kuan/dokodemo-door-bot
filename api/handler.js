@@ -9,14 +9,14 @@ function getRandomDate(begin, end) {
 
 function getMenu(subscribed, src) {
     const menu = Markup.keyboard([
-        [{ text: "🌄 Send me today's picture." }, { text: "🎲 Send me a random picture." }],
-        [{ text: '🔔 Subscribe' }, { text: '🗃 Source: en.wikipedia.org' }],
-        [{ text: '📝 Show me command list.' }, { text: 'ℹ About the bot' }]
+        [{ text: "🌄 Send me today's picture." },   { text: '🎲 Send me a random picture.' }],
+        [{ text: '🔔 Subscribe' },                  { text: '🗃 Source: en.wikipedia.org' }],
+        [{ text: '📝 Show me the command list.' },  { text: 'ℹ  About the bot' }]
     ]).resize();
-    if(subscribed) {
+    if (subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕 Unsubscribe' };
     }
-    if(src === wiki.IMG_SRCS.wikipedia_en) {
+    if (src === wiki.IMG_SRCS.wikipedia_en) {
         menu.reply_markup.keyboard[1][1] = { text: '🗃 Source: commons.wikimedia.org' };
     }
     return menu;
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     // Subscribe
     const f_sub = async ctx => {
         let user_id = ctx.message.from.id;
-        if(await user.subscribe(user_id)) {
+        if (await user.subscribe(user_id)) {
             let menu = getMenu(true, await user.getPicSource(user_id));
             ctx.reply('Great! I will send you picture of the day at 8:00 a.m. (UTC+8) every day.', menu);
         } else {
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     // Unsubscribe
     const f_unsub = async ctx => {
         let user_id = ctx.message.from.id;
-        if(await user.unsubscribe(user_id)) {
+        if (await user.unsubscribe(user_id)) {
             let menu = getMenu(false, await user.getPicSource(user_id));
             ctx.reply('Got it! I will not send you pictures unless you ask for it.', menu);
         } else {
@@ -114,7 +114,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
     try {
         const { body, query } = req;
 
-        if(!query.key || query.key !== process.env.MY_API_KEY) {
+        if (!query.key || query.key !== process.env.MY_API_KEY) {
             res.status(403).send('Permission Denied!');
             return;
         }
@@ -203,7 +203,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         await user.disconnect_db();
 
         res.status(200).send('OK');
-    } catch(err) {
+    } catch (err) {
         console.error('Error occurred in handler.');
         console.error(err.message);
         res.status(500).send('Internal Server Error!');
