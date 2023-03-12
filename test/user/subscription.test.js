@@ -3,7 +3,7 @@ import mockingoose from 'mockingoose';
 import { User } from '../../lib/user/models.js';
 import user from '../../lib/user/index.js';
 
-describe('Test subscription.js.', () => {
+describe('Test user/subscription.js.', () => {
     describe('Test subscribe()', () => {
         it('should return true if the user has not subscribed', async () => {
             mockingoose(User).toReturn({

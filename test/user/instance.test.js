@@ -3,7 +3,7 @@ import mockingoose from 'mockingoose';
 import { User } from '../../lib/user/models.js';
 import user from '../../lib/user/index.js';
 
-describe('Test instance.js', () => {
+describe('Test user/instance.js', () => {
     describe('Test add()', () => {
         it('should return true if successfully added', async () => {
             mockingoose(User).toReturn({

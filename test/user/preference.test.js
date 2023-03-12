@@ -3,7 +3,7 @@ import mockingoose from 'mockingoose';
 import { User } from '../../lib/user/models.js';
 import user from '../../lib/user/index.js';
 
-describe('Test preference.js', () => {
+describe('Test user/preference.js', () => {
     describe('Test setPicSource()', () => {
        it("should return true if the user's prefered picture source was not the given one", async () => {
             mockingoose(User).toReturn({
