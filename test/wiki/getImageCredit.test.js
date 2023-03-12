@@ -1,18 +1,18 @@
-import { IMG_SRCS } from '../../lib/wiki/index.js';
+import { PIC_SOURCES } from '../../lib/wiki/index.js';
 import rewire from 'rewire';
 const request = rewire('../../lib/wiki/request.js');
 
 const getImageCredit = request.__get__('getImageCredit');
 
 const srcs = {
-    [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',
-    [IMG_SRCS.wikipedia_en]: 'en.wikipedia.org'
+    [PIC_SOURCES.wikimedia_commons]: 'commons.wikimedia.org',
+    [PIC_SOURCES.wikipedia_en]: 'en.wikipedia.org'
 };
 
 const test_cases = [
     // 2022-03-04
     {
-        src: IMG_SRCS.wikimedia_commons,
+        src: PIC_SOURCES.wikimedia_commons,
         filename: 'View from McQueen Pass towards Lyttelton Harbour, New Zealand.jpg',
         expected: {
             artist: '<a href="//commons.wikimedia.org/wiki/User:Podzemnik" title="User:Podzemnik">Michal Klajban</a>',
@@ -22,7 +22,7 @@ const test_cases = [
     },
     // 2013-09-25
     {
-        src: IMG_SRCS.wikipedia_en,
+        src: PIC_SOURCES.wikipedia_en,
         filename: 'Sterna nereis - Little Swanport.jpg',
         expected: {
             artist: '<a href="//commons.wikimedia.org/wiki/User:JJ_Harrison" title="User:JJ Harrison">JJ Harrison</a> (<a rel="nofollow" class="external free" href="https://www.jjharrison.com.au/">https://www.jjharrison.com.au/</a>)',

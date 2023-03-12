@@ -1,20 +1,20 @@
-import { getCaptionOfPotd, IMG_SRCS } from '../../lib/wiki/index.js';
+import { getCaptionOfPotd, PIC_SOURCES } from '../../lib/wiki/index.js';
 
 const srcs = {
-    [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',
-    [IMG_SRCS.wikipedia_en]: 'en.wikipedia.org'
+    [PIC_SOURCES.wikimedia_commons]: 'commons.wikimedia.org',
+    [PIC_SOURCES.wikipedia_en]: 'en.wikipedia.org'
 };
 
 const test_cases = [
     {
         date: '2008-10-16',
-        src: IMG_SRCS.wikimedia_commons,
+        src: PIC_SOURCES.wikimedia_commons,
         expected: `La Catrina – In Mexican folk culture, the Catrina, popularized by <a href="https://en.wikipedia.org/wiki/Jos%C3%A9_Guadalupe_Posada" class="extiw" title="en:José Guadalupe Posada">José Guadalupe Posada</a>, is the skeleton of a high society woman and one of the most popular figures of the <a href="https://en.wikipedia.org/wiki/Day_of_the_Dead" class="extiw" title="en:Day of the Dead">Day of the Dead</a> celebrations in Mexico.Height&#160;: about 15 inches - 38 cm. Picture taken at the Museo de la Ciudad, Leon, Guanajuato, Mexico... a public place
 `
     },
     {
         date: '2014-04-27',
-        src: IMG_SRCS.wikipedia_en,
+        src: PIC_SOURCES.wikipedia_en,
         expected: `An overhead view of <a href="https://en.wikipedia.org/wiki/Skylab" title="Skylab">Skylab</a>, the United States' first space station, in Earth orbit as photographed from the <b><a href="https://en.wikipedia.org/wiki/Skylab_4" title="Skylab 4">Skylab 4 Command and Service Modules</a></b>. Skylab 4 was the last mission to Skylab and brought back its final crew; this photograph was the last one taken of the station before the mission re-entered Earth's atmosphere and disintegrated in 1979.
 `
     }

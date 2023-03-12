@@ -16,7 +16,7 @@ function getMenu(subscribed, src) {
     if (subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕 Unsubscribe' };
     }
-    if (src === wiki.IMG_SRCS.wikipedia_en) {
+    if (src === wiki.PIC_SOURCES.wikipedia_en) {
         menu.reply_markup.keyboard[1][1] = { text: '🗃 Source: commons.wikimedia.org' };
     }
     return menu;
@@ -155,14 +155,14 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
 
         bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
             let user_id = ctx.message.from.id;
-            await user.setPicSource(user_id, wiki.IMG_SRCS.wikipedia_en);
-            let menu = getMenu(await user.hasSubscribed(user_id), wiki.IMG_SRCS.wikipedia_en);
+            await user.setPicSource(user_id, wiki.PIC_SOURCES.wikipedia_en);
+            let menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikipedia_en);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
         bot.hears('🗃 Source: commons.wikimedia.org', async ctx => {
             let user_id = ctx.message.from.id;
-            await user.setPicSource(user_id, wiki.IMG_SRCS.wikimedia_commons);
-            let menu = getMenu(await user.hasSubscribed(user_id), wiki.IMG_SRCS.wikimedia_commons);
+            await user.setPicSource(user_id, wiki.PIC_SOURCES.wikimedia_commons);
+            let menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikimedia_commons);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 

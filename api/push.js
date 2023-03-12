@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
         user.connect_db();
 
-        for (const pic_source of Object.values(wiki.IMG_SRCS)) {
+        for (const pic_source of Object.values(wiki.PIC_SOURCES)) {
             let date = new Date().toISOString().split('T')[0];
             let img_url = await wiki.getUrlOfPotd(date, pic_source);
             let img_caption = await wiki.getCaptionOfPotd(date, pic_source);

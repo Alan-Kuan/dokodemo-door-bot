@@ -1,19 +1,19 @@
-import { getCreditOfPotd, IMG_SRCS } from '../../lib/wiki/index.js';
+import { getCreditOfPotd, PIC_SOURCES } from '../../lib/wiki/index.js';
 
 const srcs = {
-    [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',
-    [IMG_SRCS.wikipedia_en]: 'en.wikipedia.org'
+    [PIC_SOURCES.wikimedia_commons]: 'commons.wikimedia.org',
+    [PIC_SOURCES.wikipedia_en]: 'en.wikipedia.org'
 };
 
 const test_cases = [
     {
         date: '2009-07-27',
-        src: IMG_SRCS.wikimedia_commons,
+        src: PIC_SOURCES.wikimedia_commons,
         expected: 'Credit: New York\xa0: Liebler &amp; Maass Lith.\nLicense: Public domain'
     },
     {
         date: '2011-06-27',
-        src: IMG_SRCS.wikipedia_en,
+        src: PIC_SOURCES.wikipedia_en,
         expected: 'Credit: Waud, Alfred R. (Alfred Rudolph), 1828-1891\nLicense: Public domain'
     }
 ];

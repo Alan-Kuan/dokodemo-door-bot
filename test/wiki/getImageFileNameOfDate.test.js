@@ -1,27 +1,27 @@
-import { IMG_SRCS } from '../../lib/wiki/index.js';
+import { PIC_SOURCES } from '../../lib/wiki/index.js';
 import rewire from 'rewire';
 const request = rewire('../../lib/wiki/request.js');
 
 const getImageFileNameOfDate = request.__get__('getImageFileNameOfDate');
 
 const srcs = {
-    [IMG_SRCS.wikimedia_commons]: 'commons.wikimedia.org',
-    [IMG_SRCS.wikipedia_en]: 'en.wikipedia.org'
+    [PIC_SOURCES.wikimedia_commons]: 'commons.wikimedia.org',
+    [PIC_SOURCES.wikipedia_en]: 'en.wikipedia.org'
 };
 
 const test_cases = [
     {
-        src: IMG_SRCS.wikimedia_commons,
+        src: PIC_SOURCES.wikimedia_commons,
         date: '2010-06-09',
         expected: 'Roof hafez tomb.jpg'
     },
     {
-        src: IMG_SRCS.wikipedia_en,
+        src: PIC_SOURCES.wikipedia_en,
         date: '2010-08-01',
         expected: 'Pied Oystercatcher on beach.jpg'
     },
     {
-        src: IMG_SRCS.wikipedia_en,
+        src: PIC_SOURCES.wikipedia_en,
         date: '2022-07-25',
         expected: 'Lion\'s mane jellyfish in Gullmarn fjord at Sämstad 8 - edited.jpg'
     }
