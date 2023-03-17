@@ -15,12 +15,17 @@ export default async function handler(req, res) {
         user.connect_db();
 
         for (const pic_source of Object.values(wiki.PIC_SOURCES)) {
-            let date = new Date().toISOString().split('T')[0];
-            let img_url = await wiki.getUrlOfPotd(date, pic_source);
-            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
-            let subscriber_ids = await user.getSubscribersByPicSource(pic_source);
+            const subscriber_ids = await user.getSubscribersByPicSource(pic_source);
+            if (subscriber_ids.length === 0) {
+                continue;
+            }
+
+            const date = new Date().toISOString().split('T')[0];
+            const img_url = await wiki.getUrlOfPotd(date, pic_source);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+
             for (const user_id of subscriber_ids) {
-                tg.sendPhoto(user_id, img_url, {
+                await tg.sendPhoto(user_id, img_url, {
                         caption: img_caption,
                         parse_mode: 'HTML',
                         reply_markup: {
