@@ -11,8 +11,7 @@
   },
   "devDependencies": {
     "jest": "^29.4.3",
-    "mockingoose": "^2.16.2",
-    "rewire": "^6.0.0"
+    "mockingoose": "^2.16.2"
   },
   "scripts": {
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
