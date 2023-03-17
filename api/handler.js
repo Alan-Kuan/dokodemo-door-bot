@@ -35,10 +35,10 @@ export default async function handler(req, res) {
     // Send Today's Picture
     const f_pic = async ctx => {
         try {
-            let date = new Date().toISOString().split('T')[0];
-            let pic_source = await user.getPicSource(ctx.message.from.id);
-            let img_url = await wiki.getUrlOfPotd(date, pic_source);
-            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+            const date = new Date().toISOString().split('T')[0];
+            const pic_source = await user.getPicSource(ctx.message.from.id);
+            const img_url = await wiki.getUrlOfPotd(date, pic_source);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
             ctx.replyWithPhoto(img_url, {
                 caption: img_caption,
                 parse_mode: 'HTML',
@@ -57,11 +57,11 @@ export default async function handler(req, res) {
     // Send a Random Picture
     const f_rand = async ctx => {
         try {
-            let date = getRandomDate(new Date(2007, 0, 1), new Date())
+            const date = getRandomDate(new Date(2007, 0, 1), new Date())
                 .toISOString().split('T')[0];
-            let pic_source = await user.getPicSource(ctx.message.from.id);
-            let img_url = await wiki.getUrlOfPotd(date, pic_source);
-            let img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+            const pic_source = await user.getPicSource(ctx.message.from.id);
+            const img_url = await wiki.getUrlOfPotd(date, pic_source);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
             ctx.replyWithPhoto(img_url, {
                 caption: `[${date}]\n${img_caption}`,
                 parse_mode: 'HTML',
@@ -79,9 +79,9 @@ export default async function handler(req, res) {
 
     // Subscribe
     const f_sub = async ctx => {
-        let user_id = ctx.message.from.id;
+        const user_id = ctx.message.from.id;
         if (await user.subscribe(user_id)) {
-            let menu = getMenu(true, await user.getPicSource(user_id));
+            const menu = getMenu(true, await user.getPicSource(user_id));
             ctx.reply('Great! I will send you picture of the day at 8:00 a.m. (UTC+8) every day.', menu);
         } else {
             ctx.reply('Already subscribed!');
@@ -90,9 +90,9 @@ export default async function handler(req, res) {
 
     // Unsubscribe
     const f_unsub = async ctx => {
-        let user_id = ctx.message.from.id;
+        const user_id = ctx.message.from.id;
         if (await user.unsubscribe(user_id)) {
-            let menu = getMenu(false, await user.getPicSource(user_id));
+            const menu = getMenu(false, await user.getPicSource(user_id));
             ctx.reply('Got it! I will not send you pictures unless you ask for it.', menu);
         } else {
             ctx.reply('You have not subscribed!');
@@ -122,16 +122,16 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         const bot = new Telegraf(process.env.TG_TOKEN);
 
         bot.start(async ctx => {
-            let user_id = ctx.message.from.id;
+            const user_id = ctx.message.from.id;
 
-            if (await user.hasBlockedBot(user_id)) {
+            if (await user.exists(user_id) && await user.hasBlockedBot(user_id)) {
                 await user.setUnBlockedBot(user_id);
             } else {
-                await user.addUser(user_id);
+                await user.add(user_id);
             }
             
-            let pic_source = await user.getPicSource(user_id);
-            let menu = getMenu(await user.hasSubscribed(user_id), pic_source);
+            const pic_source = await user.getPicSource(user_id);
+            const menu = getMenu(await user.hasSubscribed(user_id), pic_source);
             ctx.reply("Let's find out something interesting!", menu);
         });
 
@@ -154,23 +154,23 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         bot.hears('ℹ About the bot', f_about);
 
         bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
-            let user_id = ctx.message.from.id;
+            const user_id = ctx.message.from.id;
             await user.setPicSource(user_id, wiki.PIC_SOURCES.wikipedia_en);
-            let menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikipedia_en);
+            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikipedia_en);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
         bot.hears('🗃 Source: commons.wikimedia.org', async ctx => {
-            let user_id = ctx.message.from.id;
+            const user_id = ctx.message.from.id;
             await user.setPicSource(user_id, wiki.PIC_SOURCES.wikimedia_commons);
-            let menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikimedia_commons);
+            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikimedia_commons);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 
         bot.action(/credit.*/, async ctx => {
-            let tokens = ctx.callbackQuery.data.split(' ');
-            let date = tokens[1];
-            let src = tokens[2];
-            let credit = await wiki.getCreditOfPotd(date, src);
+            const tokens = ctx.callbackQuery.data.split(' ');
+            const date = tokens[1];
+            const src = tokens[2];
+            const credit = await wiki.getCreditOfPotd(date, src);
             ctx.editMessageCaption(credit, {
                 parse_mode: 'HTML',
                 reply_markup: {
@@ -183,10 +183,10 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         });
 
         bot.action(/caption.*/, async ctx => {
-            let tokens = ctx.callbackQuery.data.split(' ');
-            let date = tokens[1];
-            let src = tokens[2];
-            let caption = await wiki.getCaptionOfPotd(date, src);
+            const tokens = ctx.callbackQuery.data.split(' ');
+            const date = tokens[1];
+            const src = tokens[2];
+            const caption = await wiki.getCaptionOfPotd(date, src);
             ctx.editMessageCaption(`[${date}]\n${caption}`, {
                 parse_mode: 'HTML',
                 reply_markup: {
