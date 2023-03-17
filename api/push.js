@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
         const tg = new Telegram(process.env.TG_TOKEN);
 
-        user.connect_db();
+        await user.connect_db();
 
         for (const pic_source of Object.values(wiki.PIC_SOURCES)) {
             const subscriber_ids = await user.getSubscribersByPicSource(pic_source);

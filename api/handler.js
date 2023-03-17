@@ -198,7 +198,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             })
         });
 
-        user.connect_db();
+        await user.connect_db();
         await bot.handleUpdate(body);
         await user.disconnect_db();
 
