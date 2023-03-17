@@ -136,7 +136,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         });
 
         bot.help(ctx => ctx.reply(help_list));
-        bot.hears('📝 Show me command list.', ctx => ctx.reply(help_list));
+        bot.hears('📝 Show me the command list.', ctx => ctx.reply(help_list));
 
         bot.command('pic', f_pic);
         bot.hears("🌄 Send me today's picture.", f_pic);
