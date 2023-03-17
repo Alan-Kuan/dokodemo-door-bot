@@ -11,12 +11,12 @@ This is a Telegram bot that sends you **picture of the day** from [Wikipedia](ht
 
 ## Dependencies
 - telegraf.js
-- serverless-postgres
+- mongoose
 - axios
 
 ## Used Services
 - [Vercel](https://vercel.com/)
-- [ElephantSQL](https://www.elephantsql.com/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas/database)
 - [cron-job.org](https://cron-job.org/en/)
 
 ## License
