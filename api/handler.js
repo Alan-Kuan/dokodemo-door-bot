@@ -102,7 +102,7 @@ export default async function handler(req, res) {
     // About
     const f_about = ctx => {
         ctx.replyWithMarkdownV2(`__*Dokodemo Door Bot*__
-This is a hobby project by Alan Kuan in 2021\\.
+This is a hobby project started by Alan Kuan in 2021\\.
 All sent photos were shot or uploaded by contributors on [Wikipedia](https://en.wikipedia.org) \
 and [Wikimedia Commons](https://commons.wikimedia.org)\\.
 Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
@@ -151,7 +151,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
         bot.hears('🔕 Unsubscribe', f_unsub);
 
         bot.command('about', f_about);
-        bot.hears('ℹ About the bot', f_about);
+        bot.hears('ℹ  About the bot', f_about);
 
         bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
             const user_id = ctx.message.from.id;
