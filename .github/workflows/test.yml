@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - master
+    paths:
+      - api/**
+      - lib/**
+      - test/**
+      - index.html
+      - package.json
+      - pnpm-lock.yaml
+      - .jest
+      - jest.config.json
+      - vercel.json
 jobs:
   test:
     runs-on: ubuntu-latest
