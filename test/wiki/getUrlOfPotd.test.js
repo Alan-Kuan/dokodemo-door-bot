@@ -15,6 +15,13 @@ const test_cases = [
         expected: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Salarom_Sabah_Frame-of-a-new-house-01.jpg/1024px-Salarom_Sabah_Frame-of-a-new-house-01.jpg',
         stubbed_filename: 'Salarom Sabah Frame-of-a-new-house-01.jpg',
         stubbed_image_url: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Salarom_Sabah_Frame-of-a-new-house-01.jpg',
+    },
+    {
+        date: '2023-07-09',
+        pic_source: PIC_SOURCES.wikimedia_commons,
+        expected: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Armoiries_de_Mar%C3%ADa_Margarita_Vargas_Santaella.svg/1024px-Armoiries_de_Mar%C3%ADa_Margarita_Vargas_Santaella.svg.png',
+        stubbed_filename: 'Armoiries de María Margarita Vargas Santaella.svg',
+        stubbed_image_url: 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Armoiries_de_Mar%C3%ADa_Margarita_Vargas_Santaella.svg',
     }
 ];
 
