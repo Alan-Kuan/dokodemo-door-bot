@@ -21,6 +21,7 @@ export default async function handler(req, res) {
         await user.disconnect_db();
 
         let msgs = [];
+        let all_succ = true;
 
         for (const [pic_source, subscriber_ids] of subscriber_ids_by_pic_source.entries()) {
             if (subscriber_ids.length === 0) {
@@ -31,7 +32,6 @@ export default async function handler(req, res) {
             const img_url = await wiki.getUrlOfPotd(date, pic_source);
             const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
             const callback_data = `credit ${date} ${pic_source}`;
-            let all_succ = true;
 
             for (const user_id of subscriber_ids) {
                 msgs.push(
