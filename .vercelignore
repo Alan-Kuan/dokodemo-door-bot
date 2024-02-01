@@ -1,9 +1,9 @@
 .env
 .env.example
-__tests__/
+test/
 images/
 LICENSE
 README.md
 .github/
-jest.config.js
+jest.config.json
 .jest/
