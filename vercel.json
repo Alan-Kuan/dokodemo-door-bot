@@ -1,26 +1,8 @@
 {
-    "rewrites": [
-        {
-            "source": "/api/(.*)",
-            "destination": "/api/404.js"
-        }
-    ],
     "redirects": [
         {
-            "source": "/lib/(.*)",
-            "destination": "https://github.com/Alan-Kuan/dokodemo-door-bot"
-        },
-        {
-            "source": "vercel.json",
-            "destination": "https://github.com/Alan-Kuan/dokodemo-door-bot"
-        },
-        {
-            "source": "yarn.lock",
-            "destination": "https://github.com/Alan-Kuan/dokodemo-door-bot"
-        },
-        {
-            "source": ".vercelignore",
-            "destination": "https://github.com/Alan-Kuan/dokodemo-door-bot"
+            "source": "/",
+            "destination": "https://t.me/dokodemo_door_bot"
         }
     ]
 }
