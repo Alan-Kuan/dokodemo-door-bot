@@ -129,7 +129,7 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             } else {
                 await user.add(user_id);
             }
-            
+
             const pic_source = await user.getPicSource(user_id);
             const menu = getMenu(await user.hasSubscribed(user_id), pic_source);
             ctx.reply("Let's find out something interesting!", menu);
