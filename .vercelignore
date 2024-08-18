@@ -5,5 +5,5 @@ images/
 LICENSE
 README.md
 .github/
-jest.config.json
-.jest/
+babel.config.json
+jest.config.ts
