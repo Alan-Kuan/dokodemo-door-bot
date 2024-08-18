@@ -8,11 +8,11 @@ on:
       - api/**
       - lib/**
       - test/**
-      - index.html
+      - babel.config.json
+      - jest.config.json
       - package.json
       - pnpm-lock.yaml
-      - .jest
-      - jest.config.json
+      - tsconfig.json
       - vercel.json
 jobs:
   test:
@@ -46,6 +46,8 @@ jobs:
 
       - name: Install Node dependencies
         run: pnpm install
+      - name: Run type checks
+        run: pnpm type-check
       - name: Run unit tests
         run: pnpm test
 
