@@ -113,11 +113,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // About
     const f_about = (ctx: Context) => {
         ctx.replyWithMarkdownV2(`__*Dokodemo Door Bot*__
-This is a hobby project started by Alan Kuan in 2021\\.
-All sent photos were shot or uploaded by contributors on [Wikipedia](https://en.wikipedia.org) \
+This is a hobby project by Alan Kuan since 2021\\.
+The purpose of the project is let one receive picture of the day from Wikipedia/Wikimedia Commons,
+and perhaps find something interesting.
+
+Credit: photos sent from this bot were shot or uploaded by contributors from [Wikipedia](https://en.wikipedia.org) \
 and [Wikimedia Commons](https://commons.wikimedia.org)\\.
-Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
-License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/master/LICENSE)`, {
+
+* Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
+* License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/master/LICENSE)`, {
             link_preview_options: {
                 is_disabled: true,
             },
