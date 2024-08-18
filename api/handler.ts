@@ -3,8 +3,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { callbackQuery } from 'telegraf/filters';
 import type { Context } from 'telegraf';
 
-import * as wiki from '#wiki/index.ts';
-import * as user from '#user/index.ts';
+import * as wiki from '#wiki/index.js';
+import * as user from '#user/index.js';
 
 // Utilities
 function getRandomDate(begin: Date, end: Date) {

@@ -1,6 +1,6 @@
 import { describe, test, expect, jest } from '@jest/globals';
 
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.ts';
+import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
 
 const test_cases = [
     {
@@ -34,14 +34,14 @@ for (const test_case of test_cases) {
     mocked_getImageUrl.mockReturnValueOnce(test_case.stubbed_image_url);
 }
 
-jest.unstable_mockModule('#wiki/request.ts', () => ({
+jest.unstable_mockModule('#wiki/request.js', () => ({
     getImageFileNameByDate: mocked_getImageFileNameByDate,
     getImageUrl: mocked_getImageUrl,
     getImageCredit: null,
     getImageCaption: null
 }));
 
-const { getUrlOfPotd } = await import('#wiki/potd.ts');
+const { getUrlOfPotd } = await import('#wiki/potd.js');
 
 describe('Test getUrlOfPotd() in wiki/potd.ts', () => {
     for (const test_case of test_cases) {

@@ -1,8 +1,8 @@
 import { Telegram } from 'telegraf';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-import * as wiki from '#wiki/index.ts';
-import * as user from '#user/index.ts';
+import * as wiki from '#wiki/index.js';
+import * as user from '#user/index.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {

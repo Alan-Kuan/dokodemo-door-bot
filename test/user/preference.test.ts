@@ -2,14 +2,14 @@ import { describe, it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 import mockingoose from 'mockingoose';
 
-import { User } from '#user/models.ts';
+import { User } from '#user/models.js';
 import {
     setPicSource,
     getPicSource,
     hasBlockedBot,
     setBlockedBot,
     setUnblockedBot,
-} from '#user/preference.ts';
+} from '#user/preference.js';
 
 describe('Test user/preference.ts', () => {
     describe('Test setPicSource()', () => {

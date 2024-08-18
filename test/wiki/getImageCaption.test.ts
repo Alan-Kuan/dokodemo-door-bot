@@ -1,7 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.ts';
-import { getImageCaption } from '#wiki/request.ts';
+import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
+import { getImageCaption } from '#wiki/request.js';
 
 const test_cases = [
     {

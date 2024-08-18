@@ -2,13 +2,13 @@ import { describe, it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 import mockingoose from 'mockingoose';
 
-import { User } from '#user/models.ts';
+import { User } from '#user/models.js';
 import {
     subscribe,
     hasSubscribed,
     unsubscribe,
     getSubscribersByPicSource,
-} from '#user/subscription.ts';
+} from '#user/subscription.js';
 
 describe('Test user/subscription.ts.', () => {
     describe('Test subscribe()', () => {

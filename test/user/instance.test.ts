@@ -2,8 +2,8 @@ import { describe, it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 import mockingoose from 'mockingoose';
 
-import { User } from '#user/models.ts';
-import { add } from '#user/instance.ts';
+import { User } from '#user/models.js';
+import { add } from '#user/instance.js';
 
 describe('Test user/instance.ts', () => {
     describe('Test add()', () => {

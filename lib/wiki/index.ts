@@ -1,5 +1,5 @@
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.ts';
-import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd } from '#wiki/potd.ts';
+import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
+import { getUrlOfPotd, getCaptionOfPotd, getCreditOfPotd } from '#wiki/potd.js';
 
 export {
     PicSource,

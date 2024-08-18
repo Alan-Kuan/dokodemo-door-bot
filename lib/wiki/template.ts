@@ -1,4 +1,4 @@
-import { PicSource } from '#wiki/misc.ts';
+import { PicSource } from '#wiki/misc.js';
 
 const templates = {
     [PicSource.WIKIMEDIA_COMMONS]: {

@@ -1,4 +1,4 @@
-import { User } from '#user/models.ts';
+import { User } from '#user/models.js';
 
 export async function add(user_id: number) {
     const filter = { user_id };

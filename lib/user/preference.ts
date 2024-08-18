@@ -1,5 +1,5 @@
-import { User } from '#user/models.ts';
-import type { PicSource } from '#wiki/misc.ts';
+import { User } from '#user/models.js';
+import type { PicSource } from '#wiki/misc.js';
 
 export async function getPicSource(user_id: number) {
     const filter = { user_id };

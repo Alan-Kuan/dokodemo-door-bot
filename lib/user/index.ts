@@ -1,5 +1,5 @@
-import { add, exists } from '#user/instance.ts';
-import { connect_db, disconnect_db } from '#user/db.ts';
+import { add, exists } from '#user/instance.js';
+import { connect_db, disconnect_db } from '#user/db.js';
 
 import {
     getPicSource,
@@ -7,14 +7,14 @@ import {
     hasBlockedBot,
     setBlockedBot,
     setUnblockedBot
-} from '#user/preference.ts';
+} from '#user/preference.js';
 
 import {
     hasSubscribed,
     subscribe,
     unsubscribe,
     getSubscribersByPicSource
-} from '#user/subscription.ts';
+} from '#user/subscription.js';
 
 
 export {

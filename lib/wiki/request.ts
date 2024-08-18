@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { getTemplate } from '#wiki/template.ts';
-import { PicSource, sanitizeHTML } from '#wiki/misc.ts';
+import { getTemplate } from '#wiki/template.js';
+import { PicSource, sanitizeHTML } from '#wiki/misc.js';
 
 const SOURCE_URLS = {
     [PicSource.WIKIMEDIA_COMMONS]: {

@@ -1,6 +1,6 @@
 import { describe, test, expect, jest } from '@jest/globals';
 
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.ts';
+import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
 
 const test_cases = [
     {
@@ -53,9 +53,9 @@ jest.unstable_mockModule('#wiki/request', () => ({
     getImageUrl: null,
 }));
 
-const { getCreditOfPotd } = await import('#wiki/potd.ts');
+const { getCreditOfPotd } = await import('#wiki/potd.js');
 
-describe('Test getCreditOfPotd() in wiki/potd.ts', () => {
+describe('Test getCreditOfPotd() in wiki/potd.js', () => {
     for (const test_case of test_cases) {
         test(`pic_source = ${ SOURCE_NAMES[test_case.pic_source] }`, async () => {
             await expect(getCreditOfPotd(test_case.date, test_case.pic_source))

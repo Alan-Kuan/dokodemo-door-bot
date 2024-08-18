@@ -3,9 +3,9 @@ import {
     getImageUrl,
     getImageCredit,
     getImageCaption
-} from '#wiki/request.ts';
-import { getTemplate } from '#wiki/template.ts';
-import type { PicSource } from '#wiki/misc.ts';
+} from '#wiki/request.js';
+import { getTemplate } from '#wiki/template.js';
+import type { PicSource } from '#wiki/misc.js';
 
 export async function getUrlOfPotd(date: string, src: PicSource) {
     const filename = await getImageFileNameByDate(date, src);
