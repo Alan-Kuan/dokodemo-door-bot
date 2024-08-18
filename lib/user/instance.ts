@@ -1,6 +1,6 @@
-import { User } from './models.js';
+import { User } from '#user/models.ts';
 
-export async function add(user_id) {
+export async function add(user_id: number) {
     const filter = { user_id };
     const update = { user_id };
 
@@ -14,7 +14,7 @@ export async function add(user_id) {
     return added;
 }
 
-export async function exists(user_id) {
+export async function exists(user_id: number) {
     const filter = { user_id };
 
     const exists = await User.exists(filter)

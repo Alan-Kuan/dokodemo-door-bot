@@ -1,8 +1,10 @@
 import { Telegram } from 'telegraf';
-import wiki from '../lib/wiki/index.js';
-import user from '../lib/user/index.js';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default async function handler(req, res) {
+import * as wiki from '#wiki/index.ts';
+import * as user from '#user/index.ts';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         const { body } = req;
         if (!body || !body.key || body.key !== process.env.MY_API_KEY) {
@@ -10,28 +12,32 @@ export default async function handler(req, res) {
             return;
         }
 
+        if (!process.env.TG_TOKEN) {
+            throw new Error('TG_TOKEN is not set');
+        }
+
         const tg = new Telegram(process.env.TG_TOKEN);
-        let subscriber_ids_by_pic_source = [];
 
         await user.connect_db();
-        for (const pic_source of Object.values(wiki.PIC_SOURCES)) {
-            const subscriber_ids = await user.getSubscribersByPicSource(pic_source);
-            subscriber_ids_by_pic_source.push(subscriber_ids);
-        }
+        const subscriber_ids_by_pic_src = await Promise.all(
+            Object.values(wiki.PicSource)
+                .filter(v => typeof v === 'number')
+                .map(async src => await user.getSubscribersByPicSource(src))
+        );
         await user.disconnect_db();
 
-        let msgs = [];
+        let msgs: Promise<any>[] = [];
         let all_succ = true;
 
-        for (const [pic_source, subscriber_ids] of subscriber_ids_by_pic_source.entries()) {
+        for (const [pic_src, subscriber_ids] of subscriber_ids_by_pic_src.entries()) {
             if (subscriber_ids.length === 0) {
                 continue;
             }
 
             const date = new Date().toISOString().split('T')[0];
-            const img_url = await wiki.getUrlOfPotd(date, pic_source);
-            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
-            const callback_data = `credit ${date} ${pic_source}`;
+            const img_url = await wiki.getUrlOfPotd(date, pic_src);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_src);
+            const callback_data = `credit ${date} ${pic_src}`;
 
             for (const user_id of subscriber_ids) {
                 msgs.push(

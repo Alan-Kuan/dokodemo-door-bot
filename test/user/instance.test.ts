@@ -1,11 +1,14 @@
+import { describe, it, expect } from '@jest/globals';
 import { Types } from 'mongoose';
 import mockingoose from 'mockingoose';
-import { User } from '../../lib/user/models.js';
-import user from '../../lib/user/index.js';
 
-describe('Test user/instance.js', () => {
+import { User } from '#user/models.ts';
+import { add } from '#user/instance.ts';
+
+describe('Test user/instance.ts', () => {
     describe('Test add()', () => {
         it('should return true if successfully added', async () => {
+            // @ts-ignore
             mockingoose(User).toReturn({
                 acknowledged: true,
                 modifiedCount: 0,
@@ -13,10 +16,11 @@ describe('Test user/instance.js', () => {
                 upsertedCount: 1,
                 matchedCount: 0
             }, 'updateOne');
-            await expect(user.add(1234)).resolves.toBe(true);
+            await expect(add(1234)).resolves.toBe(true);
         });
 
         it('should return false if the user already existed', async () => {
+            // @ts-ignore
             mockingoose(User).toReturn({
                 acknowledged: true,
                 modifiedCount: 0,
@@ -24,7 +28,7 @@ describe('Test user/instance.js', () => {
                 upsertedCount: 0,
                 matchedCount: 1
             }, 'updateOne');
-            await expect(user.add(1234)).resolves.toBe(false);
+            await expect(add(1234)).resolves.toBe(false);
         });
     });
 });

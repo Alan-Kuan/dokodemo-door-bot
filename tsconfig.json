@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "node16",
+    "moduleResolution": "node16",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "lib/**/*",
+    "api/**/*",
+    "test/**/*"
+  ]
+}

@@ -1,13 +1,17 @@
 import { Telegraf, Markup } from 'telegraf';
-import wiki from '../lib/wiki/index.js';
-import user from '../lib/user/index.js';
+import { VercelRequest, VercelResponse } from '@vercel/node';
+import { callbackQuery } from 'telegraf/filters';
+import type { Context } from 'telegraf';
+
+import * as wiki from '#wiki/index.ts';
+import * as user from '#user/index.ts';
 
 // Utilities
-function getRandomDate(begin, end) {
+function getRandomDate(begin: Date, end: Date) {
     return new Date(begin.getTime() + Math.random() * (end.getTime() - begin.getTime()));
 }
 
-function getMenu(subscribed, src) {
+function getMenu(subscribed: boolean, src: wiki.PicSource) {
     const menu = Markup.keyboard([
         [{ text: "🌄 Send me today's picture." },   { text: '🎲 Send me a random picture.' }],
         [{ text: '🔔 Subscribe' },                  { text: '🗃 Source: en.wikipedia.org' }],
@@ -16,13 +20,13 @@ function getMenu(subscribed, src) {
     if (subscribed) {
         menu.reply_markup.keyboard[1][0] = { text: '🔕 Unsubscribe' };
     }
-    if (src === wiki.PIC_SOURCES.wikipedia_en) {
+    if (src === wiki.PicSource.WIKIPEDIA_EN) {
         menu.reply_markup.keyboard[1][1] = { text: '🗃 Source: commons.wikimedia.org' };
     }
     return menu;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     const help_list = `Hope this can help you!
 /start: open the menu
 /pic: send me picture of the day
@@ -33,52 +37,59 @@ export default async function handler(req, res) {
 /about: detailed information about the bot`;
 
     // Send Today's Picture
-    const f_pic = async ctx => {
+    const f_pic = async (ctx: Context) => {
         try {
             const date = new Date().toISOString().split('T')[0];
-            const pic_source = await user.getPicSource(ctx.message.from.id);
-            const img_url = await wiki.getUrlOfPotd(date, pic_source);
-            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+            const pic_src = await user.getPicSource(ctx.message!.from.id);
+            if (pic_src === null) throw new Error('picture source is null');
+            const img_url = await wiki.getUrlOfPotd(date, pic_src);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_src);
             ctx.replyWithPhoto(img_url, {
                 caption: img_caption,
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Credit',
-                        callback_data: `credit ${date} ${pic_source}`
+                        callback_data: `credit ${date} ${pic_src}`
                     }]]
                 }
             });
         } catch (err) {
             ctx.reply('An error occurred internally!');
+            console.error(err.message);
         }
     };
 
     // Send a Random Picture
-    const f_rand = async ctx => {
+    const f_rand = async (ctx: Context) => {
         try {
             const date = getRandomDate(new Date(2007, 0, 1), new Date())
                 .toISOString().split('T')[0];
-            const pic_source = await user.getPicSource(ctx.message.from.id);
-            const img_url = await wiki.getUrlOfPotd(date, pic_source);
-            const img_caption = await wiki.getCaptionOfPotd(date, pic_source);
+
+            const pic_src = await user.getPicSource(ctx.message!.from.id);
+            if (pic_src === null) throw new Error(`Picture source of User ${ctx.message!.from.id} is missing`);
+
+            const img_url = await wiki.getUrlOfPotd(date, pic_src);
+            const img_caption = await wiki.getCaptionOfPotd(date, pic_src);
+
             ctx.replyWithPhoto(img_url, {
                 caption: `[${date}]\n${img_caption}`,
                 parse_mode: 'HTML',
                 reply_markup: {
                     inline_keyboard: [[{
                         text: 'Show Credit',
-                        callback_data: `credit ${date} ${pic_source}`
+                        callback_data: `credit ${date} ${pic_src}`
                     }]]
                 }
             });
         } catch (err) {
             ctx.reply('An error occurred internally!');
+            console.error(err.message);
         }
     };
 
     // Subscribe
-    const f_sub = async ctx => {
+    const f_sub = async (ctx: Context) => {
         const user_id = ctx.message.from.id;
         if (await user.subscribe(user_id)) {
             const menu = getMenu(true, await user.getPicSource(user_id));
@@ -89,7 +100,7 @@ export default async function handler(req, res) {
     }
 
     // Unsubscribe
-    const f_unsub = async ctx => {
+    const f_unsub = async (ctx: Context) => {
         const user_id = ctx.message.from.id;
         if (await user.unsubscribe(user_id)) {
             const menu = getMenu(false, await user.getPicSource(user_id));
@@ -100,14 +111,16 @@ export default async function handler(req, res) {
     }
 
     // About
-    const f_about = ctx => {
+    const f_about = (ctx: Context) => {
         ctx.replyWithMarkdownV2(`__*Dokodemo Door Bot*__
 This is a hobby project started by Alan Kuan in 2021\\.
 All sent photos were shot or uploaded by contributors on [Wikipedia](https://en.wikipedia.org) \
 and [Wikimedia Commons](https://commons.wikimedia.org)\\.
 Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
 License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/master/LICENSE)`, {
-            disable_web_page_preview: true
+            link_preview_options: {
+                is_disabled: true,
+            },
         });
     }
 
@@ -119,13 +132,17 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             return;
         }
 
+        if (!process.env.TG_TOKEN) {
+            throw new Error('TG_TOKEN is not set');
+        }
+
         const bot = new Telegraf(process.env.TG_TOKEN);
 
         bot.start(async ctx => {
             const user_id = ctx.message.from.id;
 
             if (await user.exists(user_id) && await user.hasBlockedBot(user_id)) {
-                await user.setUnBlockedBot(user_id);
+                await user.setUnblockedBot(user_id);
             } else {
                 await user.add(user_id);
             }
@@ -155,22 +172,25 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
 
         bot.hears('🗃 Source: en.wikipedia.org', async ctx => {
             const user_id = ctx.message.from.id;
-            await user.setPicSource(user_id, wiki.PIC_SOURCES.wikipedia_en);
-            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikipedia_en);
+            await user.setPicSource(user_id, wiki.PicSource.WIKIPEDIA_EN);
+            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PicSource.WIKIPEDIA_EN);
             ctx.reply("Let's see pictures from en.wikipedia.org.", menu);
         });
         bot.hears('🗃 Source: commons.wikimedia.org', async ctx => {
             const user_id = ctx.message.from.id;
-            await user.setPicSource(user_id, wiki.PIC_SOURCES.wikimedia_commons);
-            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PIC_SOURCES.wikimedia_commons);
+            await user.setPicSource(user_id, wiki.PicSource.WIKIMEDIA_COMMONS);
+            const menu = getMenu(await user.hasSubscribed(user_id), wiki.PicSource.WIKIMEDIA_COMMONS);
             ctx.reply("Let's see pictures from commons.wikimedia.org.", menu);
         });
 
-        bot.action(/credit.*/, async ctx => {
+        bot.action(/credit.*/, async (ctx: Context) => {
+            if (!ctx.has(callbackQuery('data'))) return;
+
             const tokens = ctx.callbackQuery.data.split(' ');
             const date = tokens[1];
             const src = tokens[2];
-            const credit = await wiki.getCreditOfPotd(date, src);
+            const credit = await wiki.getCreditOfPotd(date, parseInt(src, 10));
+
             ctx.editMessageCaption(credit, {
                 parse_mode: 'HTML',
                 reply_markup: {
@@ -182,11 +202,14 @@ License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/m
             })
         });
 
-        bot.action(/caption.*/, async ctx => {
+        bot.action(/caption.*/, async (ctx: Context) => {
+            if (!ctx.has(callbackQuery('data'))) return;
+
             const tokens = ctx.callbackQuery.data.split(' ');
             const date = tokens[1];
             const src = tokens[2];
-            const caption = await wiki.getCaptionOfPotd(date, src);
+            const caption = await wiki.getCaptionOfPotd(date, parseInt(src, 10));
+
             ctx.editMessageCaption(`[${date}]\n${caption}`, {
                 parse_mode: 'HTML',
                 reply_markup: {

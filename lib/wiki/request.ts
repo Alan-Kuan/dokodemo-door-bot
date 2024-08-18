@@ -1,11 +1,23 @@
 import axios from 'axios';
-import { getTemplate } from './template.js';
-import { SOURCE_URLS, sanitizeHTML } from './misc.js';
+
+import { getTemplate } from '#wiki/template.ts';
+import { PicSource, sanitizeHTML } from '#wiki/misc.ts';
+
+const SOURCE_URLS = {
+    [PicSource.WIKIMEDIA_COMMONS]: {
+        api_url: 'https://commons.wikimedia.org/w/api.php',
+        wiki_url: 'https://commons.wikimedia.org/wiki',
+    },
+    [PicSource.WIKIPEDIA_EN]: {
+        api_url: 'https://en.wikipedia.org/w/api.php',
+        wiki_url: 'https://en.wikipedia.org/wiki',
+    },
+};
 
 const user_agent = `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env.CONTACT })`;
 const req = axios.create({
     headers: {
-        'User-Agent': user_agent
+        'User-Agent': user_agent,
     },
     params: {
         format: 'json',
@@ -13,8 +25,8 @@ const req = axios.create({
     },
 });
 
-export async function getImageFileNameByDate(date, src) {
-    const get_filename = async title => {
+export async function getImageFileNameByDate(date: string, src: PicSource) {
+    const get_filename = async (title: string) => {
         return await req.get(SOURCE_URLS[src].api_url, {
                 params: {
                     action: 'expandtemplates',
@@ -40,7 +52,7 @@ export async function getImageFileNameByDate(date, src) {
     return filename;
 }
 
-export async function getImageUrl(filename, src) {
+export async function getImageUrl(filename: string, src: PicSource) {
     const img_url = await req.get(SOURCE_URLS[src].api_url, {
             params: {
                 action: 'query',
@@ -50,12 +62,15 @@ export async function getImageUrl(filename, src) {
             }
         })
         .then(res => res.data.query.pages[0].imageinfo[0].url)
-        .catch(err => console.error(err.message));
+        .catch(err => {
+            console.error(err.message);
+            return '';
+        });
 
     return img_url;
 }
 
-export async function getImageCredit(filename, src) {
+export async function getImageCredit(filename: string, src: PicSource) {
     const img_credit = await req.get(SOURCE_URLS[src].api_url, {
             params: {
                 action: 'query',
@@ -66,18 +81,21 @@ export async function getImageCredit(filename, src) {
             }
         })
         .then(res => {
-            let metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
-            let artist = sanitizeHTML(metadata.Artist.value);
-            let license = metadata.LicenseShortName.value;
-            let license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
+            const metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
+            const artist = sanitizeHTML(metadata.Artist.value);
+            const license = metadata.LicenseShortName.value;
+            const license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
             return { artist, license, license_url };
         })
-        .catch(err => console.error(err.message));
+        .catch(err => {
+            console.error(err.message);
+            return null;
+        });
 
     return img_credit;
 }
 
-export async function getImageCaption(title, src) {
+export async function getImageCaption(title: string, src: PicSource) {
     const img_caption = await req.get(SOURCE_URLS[src].api_url, {
             params: {
                 action: 'expandtemplates',
@@ -104,7 +122,10 @@ export async function getImageCaption(title, src) {
                 .replace(/href="\/wiki/g, `href="${ SOURCE_URLS[src].wiki_url }`);
             return caption;
         })
-        .catch(err => console.error(err.message));
+        .catch(err => {
+            console.error(err.message);
+            return '';
+        });
 
     return img_caption;
 }

@@ -1,6 +1,8 @@
-import { sanitizeHTML } from '../../lib/wiki/misc.js';
+import { describe, it, expect } from '@jest/globals';
 
-describe('Test sanitizeHTML() in wiki/misc.js', () => {
+import { sanitizeHTML } from '#wiki/misc.ts';
+
+describe('Test sanitizeHTML() in wiki/misc.ts', () => {
     it('should remove HTML tags that are not supported by Telegram', () => {
         let test_case = `<b>bold</b>, <strong>bold</strong>
             <i>italic</i>, <em>italic</em>

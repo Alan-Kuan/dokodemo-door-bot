@@ -1,4 +1,0 @@
-{
-    "setupFiles": [ "<rootDir>/.jest/setEnvVars.js" ],
-    "transform": {}
-}

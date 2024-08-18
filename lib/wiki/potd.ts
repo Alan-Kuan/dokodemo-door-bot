@@ -3,11 +3,11 @@ import {
     getImageUrl,
     getImageCredit,
     getImageCaption
-} from './request.js';
+} from '#wiki/request.ts';
+import { getTemplate } from '#wiki/template.ts';
+import type { PicSource } from '#wiki/misc.ts';
 
-import { getTemplate } from './template.js';
-
-export async function getUrlOfPotd(date, src) {
+export async function getUrlOfPotd(date: string, src: PicSource) {
     const filename = await getImageFileNameByDate(date, src);
     const img_url = await getImageUrl(filename, src);
     let segments = img_url.split('/');
@@ -23,18 +23,20 @@ export async function getUrlOfPotd(date, src) {
     return segments.join('/');
 }
 
-export async function getCaptionOfPotd(date, src) {
+export async function getCaptionOfPotd(date: string, src: PicSource) {
     const template = getTemplate(date, src, 'caption');
     return await getImageCaption(template, src);
 }
 
-export async function getCreditOfPotd(date, src) {
+export async function getCreditOfPotd(date: string, src: PicSource) {
     const filename = await getImageFileNameByDate(date, src);
-    const { artist, license, license_url } = await getImageCredit(filename, src);
+    const credit = await getImageCredit(filename, src);
 
-    if (license_url === null) {
-        return `Credit: ${ artist }\nLicense: ${ license }`;
+    if (!credit) return '';
+
+    if (credit.license_url === null) {
+        return `Credit: ${ credit.artist }\nLicense: ${ credit.license }`;
     } else {
-        return `Credit: ${ artist }\nLicense: <a href="${ license_url }">${ license }</a>`;
+        return `Credit: ${ credit.artist }\nLicense: <a href="${ credit.license_url }">${ credit.license }</a>`;
     }
 }
