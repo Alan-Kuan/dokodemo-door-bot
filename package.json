@@ -28,10 +28,6 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "imports": {
-    "#*": [
-      "./lib/*",
-      "./lib/*.ts",
-      "./lib/*/index.ts"
-    ]
+    "#*": ["./lib/*"]
   }
 }
