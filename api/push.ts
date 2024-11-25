@@ -54,6 +54,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         .catch(async err => {
                             if (err.description === 'Forbidden: bot was blocked by the user') {
                                 await user.setBlockedBot(user_id);
+                            } else if (err.description === 'Forbidden: user is deactivated') {
+                                await user.unsubscribe(user_id);
                             } else {
                                 console.error(`Error occurred when sending a photo to '${user_id}'.`);
                                 console.error(err);
