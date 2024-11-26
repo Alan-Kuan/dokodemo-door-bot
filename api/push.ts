@@ -27,7 +27,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await user.disconnect_db();
 
         let msgs: Promise<any>[] = [];
-        let all_succ = true;
 
         for (const [pic_src, subscriber_ids] of subscriber_ids_by_pic_src.entries()) {
             if (subscriber_ids.length === 0) {
@@ -51,6 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                                 }]]
                             }
                         })
+                        .then(() => true)
                         .catch(async err => {
                             if (err.description === 'Forbidden: bot was blocked by the user') {
                                 await user.setBlockedBot(user_id);
@@ -60,15 +60,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                                 console.error(`Error occurred when sending a photo to '${user_id}'.`);
                                 console.error(err);
                             }
-                            all_succ = false;
+                            return false;
                         })
                     );
             }
         }
 
-        await Promise.all(msgs);
-
-        if (!all_succ) {
+        const results = await Promise.all(msgs);
+        if (results.some(v => v === false)) {
             throw new Error('Some messages failed to be sent.');
         }
 
