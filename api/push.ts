@@ -53,6 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         })
                         .then(() => true)
                         .catch(async err => {
+                            console.log(`Error desc: "${err.response.description}"`)
                             switch (err.response.description) {
                             case 'Forbidden: bot was blocked by the user':
                                 await user.setBlockedBot(user_id);
