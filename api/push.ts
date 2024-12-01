@@ -3,7 +3,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 
 import * as wiki from '#wiki/index.js';
 import * as user from '#user/index.js';
-import { defaultMaxListeners } from 'events';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
