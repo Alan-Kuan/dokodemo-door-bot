@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         })
                         .then(() => true)
                         .catch(async err => {
-                            console.log(`Error desc: "${err.response.description}"`)
+                            console.error(`Error desc: "${err.response.description}"`)
                             switch (err.response.description) {
                             case 'Forbidden: bot was blocked by the user':
                                 await user.setBlockedBot(user_id);
@@ -72,7 +72,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const results = await Promise.all(msgs);
         if (results.some(v => v === false)) {
-            throw new Error('Some messages failed to be sent.');
+            throw new Error('Error(s) occurred while pushing messages.');
         }
 
         res.status(200).send('OK');
