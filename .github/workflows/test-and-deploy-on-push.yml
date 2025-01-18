@@ -1,7 +1,6 @@
-name: Test before Deployment
+name: Test and Deploy
 on:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - master
@@ -16,7 +15,7 @@ on:
       - tsconfig.json
       - vercel.json
 jobs:
-  test:
+  test_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current commit

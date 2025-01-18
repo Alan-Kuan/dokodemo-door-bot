@@ -1,0 +1,25 @@
+name: Test on PR
+on:
+  workflow_dispatch:
+  pull_request:
+jobs:
+  test_on_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current commit
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js v18 environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install
+      - name: Run type checks
+        run: pnpm type-check
+      - name: Run unit tests
+        run: pnpm test
