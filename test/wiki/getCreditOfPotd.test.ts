@@ -1,6 +1,7 @@
-import { describe, test, expect, jest } from '@jest/globals';
+import { describe, test, expect, vi } from 'vitest';
 
 import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
+import { getCreditOfPotd } from '#wiki/potd.js';
 
 const test_cases = [
     {
@@ -38,25 +39,18 @@ const test_cases = [
     }
 ];
 
-const mocked_getImageFileNameByDate = jest.fn()
-const mocked_getImageCredit = jest.fn()
-
-for (const test_case of test_cases) {
-    mocked_getImageFileNameByDate.mockReturnValueOnce(test_case.stubbed_filename);
-    mocked_getImageCredit.mockReturnValueOnce(test_case.stubbed_credit);
-}
-
-jest.unstable_mockModule('#wiki/request', () => ({
-    getImageFileNameByDate: mocked_getImageFileNameByDate,
-    getImageCredit: mocked_getImageCredit,
-    getImageCaption: null,
-    getImageUrl: null,
+vi.mock('#wiki/request', () => ({
+    getImageFileNameByDate: vi.fn(),
+    getImageCredit: vi.fn(),
 }));
 
-const { getCreditOfPotd } = await import('#wiki/potd.js');
+import { getImageFileNameByDate, getImageCredit } from '#wiki/request.js';
 
-describe('Test getCreditOfPotd() in wiki/potd.js', () => {
+describe('Test getCreditOfPotd() in wiki/potd.ts', () => {
     for (const test_case of test_cases) {
+        vi.mocked(getImageFileNameByDate).mockResolvedValueOnce(test_case.stubbed_filename);
+        vi.mocked(getImageCredit).mockResolvedValueOnce(test_case.stubbed_credit);
+
         test(`pic_source = ${ SOURCE_NAMES[test_case.pic_source] }`, async () => {
             await expect(getCreditOfPotd(test_case.date, test_case.pic_source))
                 .resolves.toBe(test_case.expected);

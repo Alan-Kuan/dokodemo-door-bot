@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect } from 'vitest';
 
 import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
 import { getImageFileNameByDate } from '#wiki/request.js';

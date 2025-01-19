@@ -10,17 +10,12 @@
     "telegraf": "^4.16.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-typescript": "^7.26.0",
-    "@jest/globals": "^29.7.0",
+    "@jazim/mock-mongoose": "^1.0.1",
     "@telegraf/types": "^7.1.0",
     "@types/node": "^22.10.7",
     "@vercel/node": "^5.0.2",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
-    "mockingoose": "^2.16.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.2"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -28,7 +23,7 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "type-check": "tsc --noEmit",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+    "test": "vitest --watch=false"
   },
   "imports": {
     "#*": [

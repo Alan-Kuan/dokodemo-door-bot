@@ -1,6 +1,6 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { Types } from 'mongoose';
-import mockingoose from 'mockingoose';
+import mockingoose from '@jazim/mock-mongoose';
 
 import { User } from '#user/models.js';
 import {
