@@ -6,7 +6,7 @@ export async function getPicSource(user_id: number) {
 
     const pic_source = await User.findOne(filter)
         .then(user => user?.pic_source ?? null)
-        .catch(err => {
+        .catch((err): null => {
             console.error(err.message);
             return null;
         });

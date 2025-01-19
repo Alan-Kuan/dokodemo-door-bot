@@ -50,7 +50,7 @@ export async function getSubscribersByPicSource(pic_source: PicSource) {
         .then(subscribers => {
             return subscribers.map(subscriber => subscriber.user_id);
         })
-        .catch(err => {
+        .catch((err): number[] => {
             console.error(err.message);
             return [];
         });

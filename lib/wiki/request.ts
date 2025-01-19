@@ -87,7 +87,7 @@ export async function getImageCredit(filename: string, src: PicSource) {
             const license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
             return { artist, license, license_url };
         })
-        .catch(err => {
+        .catch((err): null => {
             console.error(err.message);
             return null;
         });
