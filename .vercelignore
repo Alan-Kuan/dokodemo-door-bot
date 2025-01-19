@@ -5,5 +5,3 @@ images/
 LICENSE
 README.md
 .github/
-babel.config.json
-jest.config.ts
