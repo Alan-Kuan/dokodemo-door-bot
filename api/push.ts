@@ -52,7 +52,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         })
                         .then(() => true)
                         .catch(async err => {
-                            console.error(`Error desc: "${err.response.description}"`)
                             switch (err.response.description) {
                             case 'Forbidden: bot was blocked by the user':
                                 await user.setBlockedBot(user_id);
@@ -61,10 +60,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                                 await user.unsubscribe(user_id);
                                 break;
                             default:
-                                console.error(`Error occurred when sending a photo to '${user_id}'.`);
+                                console.error(`Error occurred while pushing to user: '${user_id}'.`);
                                 console.error(err);
+                                return false;
                             }
-                            return false;
+                            return true;
                         })
                     );
             }
