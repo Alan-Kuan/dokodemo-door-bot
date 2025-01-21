@@ -54,30 +54,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         .catch(async err => {
                             switch (err.response.description) {
                             case 'Forbidden: bot was blocked by the user':
-                                await user.setBlockedBot(user_id);
+                                if (await user.setBlockedBot(user_id)) return;
+                                console.error(`Failed to mark the bot is blocked by the user: ${user_id}.`);
                                 break;
                             case 'Forbidden: user is deactivated':
-                                await user.unsubscribe(user_id);
+                                if (await user.unsubscribe(user_id)) return;
+                                console.error(`Failed to unsubscribe for the user: ${user_id}.`);
                                 break;
                             default:
-                                console.error(`Error occurred while pushing to user: '${user_id}'.`);
+                                console.error(`An error occurred while pushing to the user: '${user_id}'.`);
                                 console.error(err);
-                                return false;
                             }
-                            return true;
                         })
                     );
             }
         }
 
-        const results = await Promise.all(msgs);
-        if (results.some(v => v === false)) {
-            throw new Error('Error(s) occurred while pushing messages.');
-        }
+        await Promise.all(msgs);
 
         res.status(200).send('OK');
     } catch (err) {
-        console.error('Error occurred in handler.');
+        console.error('An error occurred in the handler.');
         console.error(err);
         res.status(500).send('Internal Server Error!');
     }
