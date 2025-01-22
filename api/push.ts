@@ -24,7 +24,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 .filter(v => typeof v === 'number')
                 .map(async src => await user.getSubscribersByPicSource(src))
         );
-        await user.disconnect_db();
 
         let msgs: Promise<any>[] = [];
 
@@ -77,5 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.error('An error occurred in the handler.');
         console.error(err);
         res.status(500).send('Internal Server Error!');
+    } finally {
+        await user.disconnect_db();
     }
 }
