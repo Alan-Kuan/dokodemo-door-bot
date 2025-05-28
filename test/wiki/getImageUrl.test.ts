@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
+import { PicSource, SOURCE_NAMES } from '#types/index.js';
 import { getImageUrl } from '#wiki/request.js';
 
 const test_cases = [
@@ -20,7 +20,7 @@ const test_cases = [
 
 describe('Test getImageUrl() in wiki/request.ts', () => {
     for (const test_case of test_cases) {
-        test(`pic_source = ${ SOURCE_NAMES[test_case.pic_source] }`, async () => {
+        test(`pic_source = ${ SOURCE_NAMES.get(test_case.pic_source) }`, async () => {
             await expect(getImageUrl(test_case.filename, test_case.pic_source))
                 .resolves.toBe(test_case.expected);
         });

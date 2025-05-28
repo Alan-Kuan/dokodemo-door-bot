@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from 'vitest';
 
-import { PicSource, SOURCE_NAMES } from '#wiki/misc.js';
+import { PicSource, SOURCE_NAMES } from '#types/index.js';
 import { getUrlOfPotd } from '#wiki/potd.js';
 
 const test_cases = [
@@ -39,7 +39,7 @@ describe('Test getUrlOfPotd() in wiki/potd.ts', () => {
         vi.mocked(getImageFileNameByDate).mockResolvedValueOnce(test_case.stubbed_filename);
         vi.mocked(getImageUrl).mockResolvedValueOnce(test_case.stubbed_image_url);
 
-        test(`pic_source = ${ SOURCE_NAMES[test_case.pic_source] }`, async () => {
+        test(`pic_source = ${ SOURCE_NAMES.get(test_case.pic_source) }`, async () => {
             await expect(getUrlOfPotd(test_case.date, test_case.pic_source))
                 .resolves.toBe(test_case.expected);
         });

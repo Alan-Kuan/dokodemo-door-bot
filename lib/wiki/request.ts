@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { getTemplate } from '#wiki/template.js';
-import { PicSource, sanitizeHTML } from '#wiki/misc.js';
+import { PicSource } from '#types/index.js';
+import { craftTemplate, sanitizeHTML } from '#wiki/utils.js';
 
 const SOURCE_URLS = {
     [PicSource.WIKIMEDIA_COMMONS]: {
@@ -38,7 +38,7 @@ export async function getImageFileNameByDate(date: string, src: PicSource) {
             .catch(err => console.error(err.message));
     };
 
-    let template = getTemplate(date, src, 'image');
+    let template = craftTemplate(date, src, 'image');
     const filename = await get_filename(template)
         .then(async filename => {
             // if there are multiple pictures
