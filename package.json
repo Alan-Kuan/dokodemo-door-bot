@@ -5,17 +5,17 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "axios": "^1.7.9",
-    "mongoose": "^8.9.5",
+    "axios": "^1.9.0",
+    "mongoose": "^8.15.1",
     "telegraf": "^4.16.3"
   },
   "devDependencies": {
     "@jazim/mock-mongoose": "^1.0.1",
     "@telegraf/types": "^7.1.0",
-    "@types/node": "^22.10.7",
-    "@vercel/node": "^5.0.2",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.2"
+    "@types/node": "^22.15.27",
+    "@vercel/node": "^5.2.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
   },
   "engines": {
     "node": ">=22.0.0"
