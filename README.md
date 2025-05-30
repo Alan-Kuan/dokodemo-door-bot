@@ -1,5 +1,5 @@
 # Dokodemo Door Bot
-[![Test before Deployment](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test.yml/badge.svg)](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test.yml)
+[![Test on Push](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-and-deploy-on-push.yml/badge.svg)](https://github.com/Alan-Kuan/dokodemo-door-bot/actions/workflows/test-and-deploy-on-push.yml)
 
 <img src="images/profile.png" width="128px" alt="bot profile" />
 
