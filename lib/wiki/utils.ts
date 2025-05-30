@@ -18,5 +18,6 @@ export function craftTemplate(date: string, src: PicSource, type: 'image' | 'cap
 // remove HTML tags that are not supported by Telegram
 export function sanitizeHTML(html: string) {
     return html.replace(/<(?!\/?(?:b|strong|i|em|u|ins|s|strike|del|a|code|pre)(?:>|\ .*?>))\/?.*?>/g, '')
-        .replace(/^\s*\r?\n/gm, '');  // remove empty lines
+        .replace(/^\s*\r?\n/gm, '') // remove empty lines
+        .replace(/(\r?\n)$/, '');   // remove last empty line
 }

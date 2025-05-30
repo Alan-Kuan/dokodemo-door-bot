@@ -7,7 +7,7 @@ const test_cases = [
     {
         date: '2009-07-27',
         pic_source: PicSource.WIKIMEDIA_COMMONS,
-        expected: 'Credit: New York\xa0: Liebler &amp; Maass Lith.\nLicense: Public domain',
+        expected: '<b>Credit:</b> New York\xa0: Liebler &amp; Maass Lith.\n<b>License:</b> Public domain',
         stubbed_filename: 'Georges Bizet - Rosabel Morrison - Carmen poster.png',
         stubbed_credit: {
             artist: 'New York : Liebler &amp; Maass Lith.',
@@ -18,7 +18,7 @@ const test_cases = [
     {
         date: '2011-06-27',
         pic_source: PicSource.WIKIPEDIA_EN,
-        expected: 'Credit: Waud, Alfred R. (Alfred Rudolph), 1828-1891\nLicense: Public domain',
+        expected: '<b>Credit:</b> Waud, Alfred R. (Alfred Rudolph), 1828-1891\n<b>License:</b> Public domain',
         stubbed_filename: 'Kennesaw bombardment2.jpg',
         stubbed_credit: {
             artist: 'Waud, Alfred R. (Alfred Rudolph), 1828-1891',
@@ -29,7 +29,7 @@ const test_cases = [
     {
         date: '2023-03-15',
         pic_source: PicSource.WIKIMEDIA_COMMONS,
-        expected: 'Credit: <a href="https://www.wikidata.org/wiki/Q28147777" class="extiw" title="d:Q28147777">Diego Delso</a>\n\nLicense: <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>',
+        expected: '<b>Credit:</b> <a href="https://www.wikidata.org/wiki/Q28147777" class="extiw" title="d:Q28147777">Diego Delso</a>\n\n<b>License:</b> <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>',
         stubbed_filename: 'Cocodrilo del Nilo (Crocodylus niloticus), parque nacional de Chobe, Botsuana, 2018-07-28, DD 86.jpg',
         stubbed_credit: {
             artist: '<a href="https://www.wikidata.org/wiki/Q28147777" class="extiw" title="d:Q28147777">Diego Delso</a>\n',
