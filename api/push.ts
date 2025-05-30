@@ -1,3 +1,5 @@
+import { setDefaultResultOrder } from 'node:dns';
+
 import { Telegram } from 'telegraf';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
@@ -6,6 +8,9 @@ import { PicSource } from '#types/index.js';
 import * as user from '#user/index.js';
 import * as utils from '#utils/index.js';
 import * as wiki from '#wiki/index.js';
+
+// FIX: https://github.com/telegraf/telegraf/issues/1961
+setDefaultResultOrder('ipv6first');
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {

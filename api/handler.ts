@@ -1,3 +1,5 @@
+import { setDefaultResultOrder } from 'node:dns';
+
 import { Telegraf } from 'telegraf';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
@@ -5,6 +7,9 @@ import * as action from '#action/index.js';
 import { SOURCE_NAMES } from '#types/index.js';
 import * as user from '#user/index.js';
 import * as utils from '#utils/index.js';
+
+// FIX: https://github.com/telegraf/telegraf/issues/1961
+setDefaultResultOrder('ipv6first');
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
