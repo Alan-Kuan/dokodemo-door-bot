@@ -23,5 +23,4 @@ export async function replyFullCaption(ctx: Context) {
 
     // remove the button
     ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    ctx.answerCbQuery();
 }
