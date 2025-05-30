@@ -21,8 +21,6 @@ export async function replyPotd(ctx: Context, date: string) {
 
 export async function sendPicture(bot: Telegram, user_id: number, pic: Picture) {
     return bot.sendPhoto(user_id, pic.url, craftExtraPhoto(pic))
-        // TODO: watch this
-        // .then(() => true)
         .catch(async err => {
             switch (err.response.description) {
                 case 'Forbidden: bot was blocked by the user':
