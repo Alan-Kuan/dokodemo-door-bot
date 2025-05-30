@@ -30,7 +30,7 @@ export function craftExtraPhoto(pic: Picture) {
     const res = utils.paginate(pic.caption, 960, []);
 
     if (res.end_idx < pic.caption.length) {
-        caption += `${res.paginated_html}...\n`;
+        caption += `${res.paginated_html}...`;
 
         extra.reply_markup = {
             inline_keyboard: [[{
@@ -41,7 +41,7 @@ export function craftExtraPhoto(pic: Picture) {
     } else {
         caption += pic.caption;
     }
-    caption += `\n${pic.credit}`;
+    caption += `\n\n${pic.credit}`;
 
     extra.caption = caption;
     return extra;
