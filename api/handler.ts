@@ -56,6 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         bot.action(/more.*/, action.replyFullCaption);
+        bot.action(/.*/, action.answerDeprecated);
 
         await user.connect_db();
         await bot.handleUpdate(body);

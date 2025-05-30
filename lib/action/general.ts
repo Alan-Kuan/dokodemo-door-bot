@@ -49,3 +49,10 @@ and [Wikimedia Commons](https://commons.wikimedia.org)\\.
         },
     });
 }
+
+export async function answerDeprecated(ctx: Context) {
+    await ctx.answerCbQuery('Deprecated Feature');
+    await ctx.editMessageReplyMarkup({
+        inline_keyboard: [],
+    });
+}
