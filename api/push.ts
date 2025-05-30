@@ -29,10 +29,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         await user.connect_db();
 
+        const srcs = Object.values(PicSource)
+            .filter(v => typeof v === 'number') as PicSource[];
         const subscriber_ids_by_pic_src = await Promise.all(
-            Object.values(PicSource)
-                .filter(v => typeof v === 'number')
-                .map(async src => await user.getSubscribersByPicSource(src))
+            srcs.map(async src => await user.getSubscribersByPicSource(src))
         );
 
         let actions: Promise<any>[] = [];
