@@ -23,10 +23,10 @@ export function craftMenu(subscribed: boolean, pic_src: PicSource) {
     return menu;
 }
 
-export function craftExtraPhoto(pic: Picture) {
-    let extra: Types.ExtraPhoto = { parse_mode: 'HTML' };
+export function craftExtra(pic: Picture) {
+    let extra: Types.ExtraPhoto | Types.ExtraVideo = { parse_mode: 'HTML' };
     let caption = `[${pic.date}]\n\n`;
-    // NOTE: character limit of photo caption is 1024
+    // NOTE: character limit of photo/video caption is 1024
     const res = utils.paginate(pic.caption, 960, []);
 
     if (res.end_idx < pic.caption.length) {

@@ -16,13 +16,20 @@ export async function getUrlOfPotd(date: string, src: PicSource) {
     const img_url = await req.getImageUrl(filename, src);
     let segments = img_url.split('/');
 
-    segments.splice(5, 0, 'thumb');
+    if (filename.endsWith('.webm')) {
+        segments.splice(5, 0, 'transcoded');
 
-    let last_part = `1024px-${ segments[8] }`;
-    if (filename.endsWith('.svg')) {
-        last_part += '.png';
+        let last_part = `${ segments[8] }.1080p.vp9.webm`;
+        segments.push(last_part);
+    } else {
+        segments.splice(5, 0, 'thumb');
+
+        let last_part = `1024px-${ segments[8] }`;
+        if (filename.endsWith('.svg')) {
+            last_part += '.png';
+        }
+        segments.push(last_part);
     }
-    segments.push(last_part);
 
     return segments.join('/');
 }
