@@ -12,7 +12,7 @@ const test_cases = [
     {
         title: '{{Potd/2008-10-16 (en)}}',
         pic_source: PicSource.WIKIMEDIA_COMMONS,
-        expected: `La Catrina – In Mexican folk culture, the Catrina, popularized by <a href="https://en.wikipedia.org/wiki/Jos%C3%A9_Guadalupe_Posada" class="extiw" title="en:José Guadalupe Posada">José Guadalupe Posada</a>, is the skeleton of a high society woman and one of the most popular figures of the <a href="https://en.wikipedia.org/wiki/Day_of_the_Dead" class="extiw" title="en:Day of the Dead">Day of the Dead</a> celebrations in Mexico.Height&#160;: about 15 inches - 38 cm. Picture taken at the Museo de la Ciudad, Leon, Guanajuato, Mexico... a public place`
+        expected: `La Catrina – In Mexican folk culture, the Catrina, popularized by <a href="https://en.wikipedia.org/wiki/Jos%C3%A9_Guadalupe_Posada" class="extiw" title="en:José Guadalupe Posada">José Guadalupe Posada</a>, is the skeleton of a high society woman and one of the most popular figures of the <a href="https://en.wikipedia.org/wiki/Day_of_the_Dead" class="extiw" title="en:Day of the Dead">Day of the Dead</a> celebrations in Mexico.Height&nbsp;: about 15 inches - 38 cm. Picture taken at the Museo de la Ciudad, Leon, Guanajuato, Mexico... a public place`
     },
     {
         title: '{{POTD/2015-11-05|caption}}',
