@@ -10,9 +10,10 @@ export async function replyFullCaption(ctx: Context) {
     const tokens = ctx.callbackQuery.data.split(' ');
     const date = tokens[1];
     const src = tokens[2];
+    const len_limit = parseInt(tokens[3]);
     let caption = await wiki.getCaptionOfPotd(date, parseInt(src, 10));
 
-    let res = utils.paginate(caption, 960, []);
+    let res = utils.paginate(caption, len_limit, []);
     caption = caption.slice(res.end_idx);
     do {
         // NOTE: character limit of regular text message is 4096
