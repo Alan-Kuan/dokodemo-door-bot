@@ -25,12 +25,15 @@ export function craftMenu(subscribed: boolean, pic_src: PicSource) {
 
 export function craftExtra(pic: Picture) {
     let extra: Types.ExtraPhoto | Types.ExtraVideo = { parse_mode: 'HTML' };
-    let caption = `[${pic.date}]\n\n`;
+    const date_part = `[${pic.date}]\n\n`;
+    const credit_part = `\n\n${pic.credit}`;
+
     // NOTE: character limit of photo/video caption is 1024
-    const res = utils.paginate(pic.caption, 960, []);
+    const len_limit = 1024 - date_part.length - credit_part.length;
+    const res = utils.paginate(pic.caption, len_limit, []);
 
     if (res.end_idx < pic.caption.length) {
-        caption += `${res.paginated_html}...`;
+        extra.caption = date_part + `${res.paginated_html}...` + credit_part;
 
         extra.reply_markup = {
             inline_keyboard: [[{
@@ -39,10 +42,8 @@ export function craftExtra(pic: Picture) {
             }]]
         };
     } else {
-        caption += pic.caption;
+        extra.caption = date_part + pic.caption + credit_part;
     }
-    caption += `\n\n${pic.credit}`;
 
-    extra.caption = caption;
     return extra;
 }
