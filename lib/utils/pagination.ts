@@ -119,7 +119,7 @@ export function paginate(html: string, max_char: number, unclosed_tags: Tag[]) {
 
     if (end_idx == html.length) {
         return {
-            paginated_html: prefix + html.slice(0, end_idx),
+            paginated_html: prefix + html,
             end_idx,
             unclosed_tags: [] as Tag[],
         };
