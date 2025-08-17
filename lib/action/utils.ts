@@ -38,7 +38,7 @@ export function craftExtra(pic: Picture) {
         extra.reply_markup = {
             inline_keyboard: [[{
                 text: 'More',
-                callback_data: `more ${pic.date} ${pic.src} len_limit`,
+                callback_data: `more ${pic.date} ${pic.src} ${len_limit}`,
             }]]
         };
     } else {
