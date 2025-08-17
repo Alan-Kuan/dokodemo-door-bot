@@ -10,9 +10,9 @@ const test_cases = [
         expected: `Animated view of <a href="https://en.wikipedia.org/wiki/Jupiter" class="extiw" title="en:Jupiter">Jupiter</a> getting larger. These pictures were taken every 10 hours over 28 days in 1979 by <a href="https://en.wikipedia.org/wiki/Voyager_1" class="extiw" title="en:Voyager 1">Voyager 1</a> probe`
     },
     {
-        title: '{{Potd/2008-10-16 (en)}}',
+        title: '{{Potd/2008-10-07 (en)}}',
         pic_source: PicSource.WIKIMEDIA_COMMONS,
-        expected: `La Catrina – In Mexican folk culture, the Catrina, popularized by <a href="https://en.wikipedia.org/wiki/Jos%C3%A9_Guadalupe_Posada" class="extiw" title="en:José Guadalupe Posada">José Guadalupe Posada</a>, is the skeleton of a high society woman and one of the most popular figures of the <a href="https://en.wikipedia.org/wiki/Day_of_the_Dead" class="extiw" title="en:Day of the Dead">Day of the Dead</a> celebrations in Mexico.Height&nbsp;: about 15 inches - 38 cm. Picture taken at the Museo de la Ciudad, Leon, Guanajuato, Mexico... a public place`
+        expected: `<a href="https://commons.wikimedia.org/wiki/William_Shakespeare" title="William Shakespeare">William Shakespeare</a>'s <i><a href="https://commons.wikimedia.org/wiki/Category:The_Taming_of_the_Shrew" title="Category:The Taming of the Shrew">Taming of the Shrew</a></i>, Act IV, Scene III. Petruchio, in an effort to get his new wife to submit to his will, finds fault with all the gifts he bought for her, and sends them away.`
     },
     {
         title: '{{POTD/2015-11-05|caption}}',
