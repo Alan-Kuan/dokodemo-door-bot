@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { PicSource } from '#types/index.js';
+import { paginate } from '#utils/pagination.js';
 import { craftTemplate, sanitizeHTML } from '#wiki/utils.js';
 
 const SOURCE_URLS = {
@@ -82,7 +83,12 @@ export async function getImageCredit(filename: string, src: PicSource) {
         })
         .then(res => {
             const metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
-            const artist = sanitizeHTML(metadata.Artist.value);
+            let artist = sanitizeHTML(metadata.Artist.value)
+            // limit artist length
+            const pag_res = paginate(artist, 50, []);
+            if (pag_res.end_idx < artist.length) {
+                artist = pag_res.paginated_html + '...';
+            }
             const license = metadata.LicenseShortName.value;
             const license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
             return { artist, license, license_url };
