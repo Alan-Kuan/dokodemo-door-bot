@@ -77,7 +77,7 @@ export async function getImageCredit(filename: string, src: PicSource) {
                 action: 'query',
                 prop: 'imageinfo',
                 iiprop: 'extmetadata',
-                iiextmetadatafilter: 'LicenseShortName|Artist|LicenseUrl',
+                iiextmetadatafilter: 'Artist|LicenseShortName|LicenseUrl',
                 titles: `Image:${ filename }`
             }
         })
