@@ -1,7 +1,8 @@
+.github/
+images/
+test/
 .env
 .env.example
-test/
-images/
 LICENSE
 README.md
-.github/
+vitest.config.ts
