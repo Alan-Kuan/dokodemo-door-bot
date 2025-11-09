@@ -1,9 +1,7 @@
-import { Markup } from 'telegraf';
-import type { Types } from 'telegraf';
+import { Markup, type Types } from 'telegraf';
 
-import { PicSource } from '#types/index.js';
-import type { Picture } from '#types/index.js';
-import * as utils from '#utils/index.js';
+import { PicSource, type Picture, type Potd } from '#types/index.js';
+import { paginate } from '#utils/index.js';
 
 export function craftMenu(subscribed: boolean, pic_src: PicSource) {
     const menu = Markup.keyboard([
@@ -23,27 +21,56 @@ export function craftMenu(subscribed: boolean, pic_src: PicSource) {
     return menu;
 }
 
-export function craftExtra(pic: Picture) {
-    let extra: Types.ExtraPhoto | Types.ExtraVideo = { parse_mode: 'HTML' };
-    const date_part = `[${pic.date}]\n\n`;
-    const credit_part = `\n\n${pic.credit}`;
+export function craftExtraPhoto(potd: Potd): Types.ExtraPhoto {
+    const res = makeCaption(potd);
 
-    // NOTE: character limit of photo/video caption is 1024
-    const len_limit = 1024 - date_part.length - credit_part.length;
-    const res = utils.paginate(pic.caption, len_limit, []);
-
-    if (res.end_idx < pic.caption.length) {
-        extra.caption = date_part + `${res.paginated_html}...` + credit_part;
-
-        extra.reply_markup = {
+    return {
+        parse_mode: 'HTML',
+        caption: res.caption,
+        reply_markup: res.too_long ? {
             inline_keyboard: [[{
                 text: 'More',
-                callback_data: `more ${pic.date} ${pic.src} ${len_limit}`,
+                callback_data: `more ${potd.date} ${potd.src} ${res.len_limit}`,
             }]]
-        };
-    } else {
-        extra.caption = date_part + pic.caption + credit_part;
-    }
+        } : undefined,
+    };
+}
 
-    return extra;
+export function craftMediaGroup(pictures: Picture[]): Types.MediaGroup {
+    return pictures.map(picture => ({ type: 'photo', media: picture.url }));
+}
+
+export function craftMediaGroupMessage(potd: Potd): [string, Types.ExtraReplyMessage] {
+    const res = makeCaption(potd);
+
+    const extra: Types.ExtraReplyMessage = {
+        link_preview_options: {
+            is_disabled: true,
+        },
+        parse_mode: 'HTML',
+        reply_markup: res.too_long ? {
+            inline_keyboard: [[{
+                text: 'More',
+                callback_data: `more ${potd.date} ${potd.src} ${res.len_limit}`,
+            }]]
+        } : undefined,
+    };
+
+    return [res.caption, extra];
+}
+
+function makeCaption(potd: Potd) {
+    const date_part = `[${potd.date}]\n\n`;
+    const credit_part = `\n\n${potd.credit}`;
+
+    // NOTE: character limit of a caption is 1024
+    const len_limit = 1024 - date_part.length - credit_part.length;
+    const res = paginate(potd.caption, len_limit, []);
+
+    const too_long = res.end_idx < potd.caption.length;
+    const caption = date_part +
+        (too_long ? `${res.paginated_html}...` : potd.caption) +
+        credit_part;
+
+    return { too_long, caption, len_limit };
 }

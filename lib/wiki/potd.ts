@@ -1,53 +1,61 @@
-import type { PicSource } from '#types/index.js';
-import * as req from '#wiki/request.js';
-import { craftTemplate } from '#wiki/utils.js';
+import type { Credit, PicSource, Potd } from '#types/index.js';
+import {
+    getCaptionByDate,
+    getCredit,
+    getFilenamesByDate,
+    getPicture,
+} from '#wiki/request.js';
+import { getPageUrl } from '#wiki/utils.js';
 
-export async function getPotd(date: string, src: PicSource) {
+export async function getPotd(date: string, src: PicSource): Promise<Potd> {
+    const filenames = await getFilenamesByDate(date, src);
+
     return {
-        date, src,
-        url: await getUrlOfPotd(date, src),
-        caption: await getCaptionOfPotd(date, src),
-        credit: await getCreditOfPotd(date, src),
+        date,
+        src,
+        pictures: await Promise.all(
+            filenames.map(async filename => getPicture(filename, src))
+        ),
+        caption: await getCaptionByDate(date, src),
+        credit: getFormattedCredit(await getCredit(filenames[0], src)),
+        page_url: getPageUrl(date, src),
     };
 }
 
-export async function getUrlOfPotd(date: string, src: PicSource) {
-    const filename = await req.getImageFileNameByDate(date, src);
-    const img_url = await req.getImageUrl(filename, src);
-    let segments = img_url.split('/');
-
-    if (filename.endsWith('.webm')) {
-        segments.splice(5, 0, 'transcoded');
-
-        let last_part = `${ segments[8] }.1080p.vp9.webm`;
-        segments.push(last_part);
-    } else {
-        segments.splice(5, 0, 'thumb');
-
-        let last_part = `1024px-${ segments[8] }`;
-        if (filename.endsWith('.svg')) {
-            last_part += '.png';
-        }
-        segments.push(last_part);
-    }
-
-    return segments.join('/');
-}
-
-export async function getCaptionOfPotd(date: string, src: PicSource) {
-    const template = craftTemplate(date, src, 'caption');
-    return await req.getImageCaption(template, src);
-}
-
-export async function getCreditOfPotd(date: string, src: PicSource) {
-    const filename = await req.getImageFileNameByDate(date, src);
-    const credit = await req.getImageCredit(filename, src);
-
-    if (!credit) return '';
-
-    if (credit.license_url === null) {
-        return `<b>Credit:</b> ${ credit.artist }\n<b>License:</b> ${ credit.license }`;
-    } else {
+function getFormattedCredit(credit: Credit) {
+    if (credit.license_url) {
         return `<b>Credit:</b> ${ credit.artist }\n<b>License:</b> <a href="${ credit.license_url }">${ credit.license }</a>`;
+    } else {
+        return `<b>Credit:</b> ${ credit.artist }\n<b>License:</b> ${ credit.license }`;
     }
+}
+
+if (import.meta.vitest) {
+    const { describe, expect, test } = import.meta.vitest;
+
+    const test_cases = [
+        {
+            credit: {
+                artist: 'New York : Liebler &amp; Maass Lith.',
+                license: 'Public domain',
+            },
+            expected: '<b>Credit:</b> New York\xa0: Liebler &amp; Maass Lith.\n<b>License:</b> Public domain',
+        },
+        {
+            credit: {
+                artist: '<a href="https://www.wikidata.org/wiki/Q28147777" class="extiw" title="d:Q28147777">Diego Delso</a>\n',
+                license: 'CC BY-SA 4.0',
+                license_url: 'https://creativecommons.org/licenses/by-sa/4.0',
+            },
+            expected: '<b>Credit:</b> <a href="https://www.wikidata.org/wiki/Q28147777" class="extiw" title="d:Q28147777">Diego Delso</a>\n\n<b>License:</b> <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>',
+        },
+    ];
+
+    describe('Test getFormattedCredit() in wiki/potd.ts', () => {
+        for (const [idx, test_case] of test_cases.entries()) {
+            test(`Test ${idx}`, async () => {
+                expect(getFormattedCredit(test_case.credit)).toBe(test_case.expected);
+            });
+        }
+    });
 }

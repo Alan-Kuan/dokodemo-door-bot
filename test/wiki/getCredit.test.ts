@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 
 import { PicSource, SOURCE_NAMES } from '#types/index.js';
-import { getImageCredit } from '#wiki/request.js';
+import { getCredit } from '#wiki/request.js';
 
 const test_cases = [
     // 2022-03-04
@@ -26,10 +26,10 @@ const test_cases = [
     }
 ];
 
-describe('Test getImageCredit() in wiki/request.ts', () => {
+describe('Test getCredit() in wiki/request.ts', () => {
     for (const test_case of test_cases) {
         test(`pic_source = ${ SOURCE_NAMES.get(test_case.pic_source) }`, async () => {
-            await expect(getImageCredit(test_case.filename, test_case.pic_source))
+            await expect(getCredit(test_case.filename, test_case.pic_source))
                 .resolves.toEqual(test_case.expected);
         });
     }

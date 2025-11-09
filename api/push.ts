@@ -39,10 +39,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         for (const [pic_src, subscriber_ids] of subscriber_ids_by_pic_src.entries()) {
             if (subscriber_ids.length === 0) continue;
 
-            const pic = await wiki.getPotd(utils.today(), pic_src);
+            const potd = await wiki.getPotd(utils.today(), pic_src);
 
             for (const user_id of subscriber_ids) {
-                actions.push(action.sendPicture(bot, user_id, pic));
+                actions.push(action.sendPotd(bot, user_id, potd));
             }
         }
         await Promise.all(actions);

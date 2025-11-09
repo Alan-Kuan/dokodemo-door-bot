@@ -9,9 +9,23 @@ export const SOURCE_NAMES = new Map([
 ]);
 
 export type Picture = {
+    url: string,
+    width: number,
+    height: number,
+    size: number,
+};
+
+export type Potd = {
     date: string,
     src: PicSource,
-    url: string,
+    pictures: Picture[],
     caption: string,
     credit: string,
+    page_url: string,
+};
+
+export type Credit = {
+    artist: string,
+    license: string,
+    license_url?: string,
 };

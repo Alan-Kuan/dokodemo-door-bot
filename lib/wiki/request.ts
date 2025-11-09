@@ -1,24 +1,12 @@
 import axios from 'axios';
 
-import { PicSource } from '#types/index.js';
-import { paginate } from '#utils/pagination.js';
-import { craftTemplate, sanitizeHTML } from '#wiki/utils.js';
+import { type Credit, type Picture, PicSource } from '#types/index.js';
+import { paginate } from '#utils/index.js';
+import { craftTemplate, SOURCE_URLS, sanitizeHTML, TemplateType } from '#wiki/utils.js';
 
-const SOURCE_URLS = {
-    [PicSource.WIKIMEDIA_COMMONS]: {
-        api_url: 'https://commons.wikimedia.org/w/api.php',
-        wiki_url: 'https://commons.wikimedia.org/wiki',
-    },
-    [PicSource.WIKIPEDIA_EN]: {
-        api_url: 'https://en.wikipedia.org/w/api.php',
-        wiki_url: 'https://en.wikipedia.org/wiki',
-    },
-};
-
-const user_agent = `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env.CONTACT })`;
 const req = axios.create({
     headers: {
-        'User-Agent': user_agent,
+        'User-Agent': `DokodemoDoorBot/${ process.env.BOT_VERSION } (${ process.env.CONTACT })`,
     },
     params: {
         format: 'json',
@@ -26,112 +14,88 @@ const req = axios.create({
     },
 });
 
-export async function getImageFileNameByDate(date: string, src: PicSource) {
-    const get_filename = async (title: string) => {
-        return await req.get(SOURCE_URLS[src].api_url, {
-                params: {
-                    action: 'expandtemplates',
-                    prop: 'wikitext',
-                    text: title
-                }
-            })
-            .then(res => res.data.expandtemplates.wikitext)
-            .catch(err => console.error(err.message));
-    };
+export async function getFilenamesByDate(date: string, src: PicSource): Promise<string[]> {
+    const res = await req.get(SOURCE_URLS[src].api_url, {
+        params: {
+            action: 'parse',
+            prop: 'images',
+            page: craftTemplate(date, src, TemplateType.PAGE),
+        }
+    });
 
-    let template = craftTemplate(date, src, 'image');
-    const filename = await get_filename(template)
-        .then(async filename => {
-            // if there are multiple pictures
-            if (filename === '{{{image}}}') {
-                template = template.replace('image', 'image1');
-                return await get_filename(template);
-            }
-            return filename;
-        });
-
-    return filename;
+    return res.data.parse.images;
 }
 
-export async function getImageUrl(filename: string, src: PicSource) {
-    const img_url = await req.get(SOURCE_URLS[src].api_url, {
-            params: {
-                action: 'query',
-                prop: 'imageinfo',
-                iiprop: 'url',
-                titles: `Image:${ filename }`
-            }
-        })
-        .then(res => res.data.query.pages[0].imageinfo[0].url)
-        .catch(err => {
-            console.error(err.message);
-            return '';
-        });
-
-    return img_url;
-}
-
-export async function getImageCredit(filename: string, src: PicSource) {
-    const img_credit = await req.get(SOURCE_URLS[src].api_url, {
-            params: {
-                action: 'query',
-                prop: 'imageinfo',
-                iiprop: 'extmetadata',
-                iiextmetadatafilter: 'Artist|LicenseShortName|LicenseUrl',
-                titles: `Image:${ filename }`
-            }
-        })
-        .then(res => {
-            const metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
-            let artist = sanitizeHTML(metadata.Artist.value)
-            // limit artist length
-            const pag_res = paginate(artist, 50, []);
-            if (pag_res.end_idx < artist.length) {
-                artist = pag_res.paginated_html + '...';
-            }
-            const license = metadata.LicenseShortName.value;
-            const license_url = metadata.hasOwnProperty('LicenseUrl') ? metadata.LicenseUrl.value : null;
-            return { artist, license, license_url };
-        })
-        .catch((err): null => {
-            console.error(err.message);
-            return null;
-        });
-
-    return img_credit;
-}
-
-export async function getImageCaption(title: string, src: PicSource) {
-    const img_caption = await req.get(SOURCE_URLS[src].api_url, {
+export async function getCaptionByDate(date: string, src: PicSource): Promise<string> {
+    const res = await req.get(SOURCE_URLS[src].api_url, {
             params: {
                 action: 'expandtemplates',
                 prop: 'wikitext',
-                text: title,
+                text: craftTemplate(date, src, TemplateType.CAPTION),
             }
         })
-        .then(async res => {
-            let content = res.data.expandtemplates.wikitext;
-            return await req.get(SOURCE_URLS[src].api_url, {
-                    params: {
-                        action: 'parse',
-                        prop: 'text',
-                        contentmodel: 'wikitext',
-                        text: content,
-                        wrapoutputclass: '',
-                        disablelimitreport: 1
-                    }
-                });
-        })
-        .then(res => {
-            let caption = sanitizeHTML(res.data.parse.text)
-                .replace(/\\"/g, '"').replace(/\\n/g, '').replace(/\\r/g, '')
-                .replace(/href="\/wiki/g, `href="${ SOURCE_URLS[src].wiki_url }`);
-            return caption;
-        })
-        .catch(err => {
-            console.error(err.message);
-            return '';
-        });
+        .then(async res => await req.get(SOURCE_URLS[src].api_url, {
+                params: {
+                    action: 'parse',
+                    prop: 'text',
+                    contentmodel: 'wikitext',
+                    text: res.data.expandtemplates.wikitext,
+                    wrapoutputclass: '',
+                    disablelimitreport: 1
+                }
+            })
+        );
 
-    return img_caption;
+    return sanitizeHTML(res.data.parse.text)
+        // replace `\\"` with `"`, remove `\\n` and `\\r`
+        .replace(/\\"/g, '"').replace(/\\n/g, '').replace(/\\r/g, '')
+        // prepend wiki base url to links
+        .replace(/href="\/wiki/g, `href="${SOURCE_URLS[src].wiki_url}`);
+}
+
+export async function getPicture(filename: string, src: PicSource): Promise<Picture> {
+    const res = await req.get(SOURCE_URLS[src].api_url, {
+        params: {
+            action: 'query',
+            titles: `File:${filename}`,
+            prop: 'imageinfo',
+            iiprop: 'url|size',
+            iiurlwidth: 1024,
+        }
+    });
+    const info = res.data.query.pages[0].imageinfo[0];
+    const thumb_res = await req.head(info.thumburl);
+
+    return {
+        url: info.thumburl,
+        width: info.thumbwidth,
+        height: info.thumbheight,
+        size: Number(thumb_res.headers['content-length']),
+    };
+}
+
+export async function getCredit(filename: string, src: PicSource): Promise<Credit> {
+    const res = await req.get(SOURCE_URLS[src].api_url, {
+        params: {
+            action: 'query',
+            prop: 'imageinfo',
+            iiprop: 'extmetadata',
+            iiextmetadatafilter: 'Artist|LicenseShortName|LicenseUrl',
+            titles: `File:${filename}`
+        }
+    });
+    const metadata = res.data.query.pages[0].imageinfo[0].extmetadata;
+
+    let artist = sanitizeHTML(metadata.Artist.value);
+    // limit artist length
+    const pag_res = paginate(artist, 50, []);
+    if (pag_res.end_idx < artist.length) {
+        artist = pag_res.paginated_html + '...';
+    }
+
+    return {
+        artist,
+        license: metadata.LicenseShortName.value,
+        license_url: metadata.LicenseUrl?.value,
+    };
 }
