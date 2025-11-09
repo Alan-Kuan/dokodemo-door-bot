@@ -33,15 +33,15 @@ export async function replyHelp(ctx: Context) {
 
 export async function replyAbout(ctx: Context) {
     const about = `__*Dokodemo Door Bot*__
-This is a hobby project by Alan Kuan since 2021\\. \
-The purpose of the project is let one receive picture of the day from Wikipedia/Wikimedia Commons, \
-and perhaps find something interesting\\.
+This is a hobby project created by Alan Kuan in 2021\\. \
+The purpose of the project is letting one receive picture of the day from Wikipedia/Wikimedia Commons \
+and perhaps discover something interesting\\.
 
 Photos sent from this bot were shot or uploaded by contributors from [Wikipedia](https://en.wikipedia.org) \
 and [Wikimedia Commons](https://commons.wikimedia.org)\\.
 
-\\* Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
-\\* License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/master/LICENSE)`;
+\\• Source Code: [dokodemo\\-door\\-bot](https://github.com/Alan-Kuan/dokodemo-door-bot)
+\\• License: [The MIT License](https://github.com/Alan-Kuan/dokodemo-door-bot/blob/master/LICENSE)`;
 
     await ctx.replyWithMarkdownV2(about, {
         link_preview_options: {
